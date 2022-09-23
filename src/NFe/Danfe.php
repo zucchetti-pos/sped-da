@@ -1032,9 +1032,7 @@ class Danfe extends DaCommon
             //endereço
             $y1     = $y1 + 5;
             $aFont  = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
-            $fone   = !empty($this->enderEmit->getElementsByTagName("fone")->item(0)->nodeValue)
-                ? $this->enderEmit->getElementsByTagName("fone")->item(0)->nodeValue
-                : '';
+            $fone = $this->getTagValue($this->enderEmit, "fone")!=""? $this->formatFone($this->enderEmit):'';
             $lgr    = $this->getTagValue($this->enderEmit, "xLgr");
             $nro    = $this->getTagValue($this->enderEmit, "nro");
             $cpl    = $this->getTagValue($this->enderEmit, "xCpl", " - ");
@@ -1540,6 +1538,32 @@ class Danfe extends DaCommon
 
         return ($y + $h);
     } //fim da função destinatarioDANFE
+
+    /**
+     * formatFone
+     * Formata campo fone contida na NF-e
+     *
+     * @param  string $field campo fone da NF-e
+     * @return string
+     */
+    protected function formatFone($field)
+    {
+        try {
+            $fone = !empty($field->getElementsByTagName("fone")->item(0)->nodeValue) ?
+            $field->getElementsByTagName("fone")->item(0)->nodeValue : '';
+            $foneLen = strlen($fone);
+            if ($foneLen > 0) {
+                $fone2 = substr($fone, 0, $foneLen - 4);
+                $fone1 = substr($fone, 0, $foneLen - 8);
+                $fone = '(' . $fone1 . ') ' . substr($fone2, -4) . '-' . substr($fone, -4);
+            } else {
+                $fone = '';
+            }
+            return $fone;
+        } catch (Exception $exc) {
+            return '';
+        }
+    }
 
     /**
      * localEntregaDANFE
