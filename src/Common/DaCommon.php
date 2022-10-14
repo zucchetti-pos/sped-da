@@ -278,7 +278,7 @@ class DaCommon extends Common
         }
         if (substr($logo, 0, 24) !== 'data://text/plain;base64') {
             if (is_file($logo)) {
-                $logo = 'data://text/plain;base64,'. base64_encode(file_get_contents($logo));
+                $logo = 'data://text/plain;base64,' . base64_encode(file_get_contents($logo));
             } else {
                 //se não é uma string e nem um file retorna nulo
                 return null;
@@ -320,7 +320,7 @@ class DaCommon extends Common
         imagedestroy($image);
         $logo = ob_get_contents(); // read from buffer
         ob_end_clean();
-        return 'data://text/plain;base64,'.base64_encode($logo);
+        return 'data://text/plain;base64,' . base64_encode($logo);
     }
 
     public function setWhiteBackgroundNfeLogo(string $logoImage, string $imageUrl): void
@@ -340,7 +340,7 @@ class DaCommon extends Common
         $logo = ob_get_contents();
         ob_end_clean();
 
-        $this->logomarca = 'data://text/plain;base64,'.base64_encode($logo);
+        $this->logomarca = 'data://text/plain;base64,' . base64_encode($logo);
     }
 
     /**

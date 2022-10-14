@@ -414,13 +414,12 @@ class Danfse extends DaCommon
         }
 
         $h = 25;
-        $texto = '';
         $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
 
         if ($this->orientacao == 'P') {
-            $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 1, '', false);
+            $this->pdf->textBox($x, $y, $w, $h, '', $aFont, 'C', 'L', 1, '', false);
         } else {
-            $this->pdf->textBox90($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 1, '', false);
+            $this->pdf->textBox90($x, $y, $w, $h, '', $aFont, 'C', 'L', 1, '', false);
         }
 
         if ($this->orientacao == 'P') {
@@ -457,8 +456,6 @@ class Danfse extends DaCommon
 
     private function prestador(float $x, float $y): float
     {
-        // $oldX = $x;
-        // $oldY = $y;
         if ($this->orientacao == 'P') {
             $maxW = $this->wPrint;
         } else {
@@ -466,15 +463,18 @@ class Danfse extends DaCommon
         }
 
         $w     = $maxW;
-        $h     = 35;
+        $h     = 6;
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         if ($this->orientacao == 'P') {
             $this->drawBox($x, $y, $w, $h);
             $texto = "PRESTADOR DE SERVIÇOS";
-            $aFont = ['font' => $this->fontePadrao, 'size' => 12, 'style' => 'B'];
-            $this->pdf->textBox($x, $y - 12, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+            $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => 'B'];
+            $this->pdf->textBox($x, $y - 0.3, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
         }
 
+        $y += $h;
+        $h = 35;
+        $this->drawBox($x, $y, $w, $h);
         if (!empty($this->logomarca)) {
             $logoInfo = getimagesize($this->logomarca);
             //largura da imagem em mm
@@ -499,13 +499,56 @@ class Danfse extends DaCommon
             $tw = $w;
         }
 
-        $y1 = $y - 5;
-        $texto = "CPF/CNPJ: ";
-        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
-        $this->pdf->textBox($x - 40, $y1, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+
+        // CPF/CNPJ
+        $x += $nImgW;
+        $w = round($maxW * 0.15, 0);
+        $h = 17;
+        $texto = "CPF/CNPJ:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
         $texto = $this->formatField($this->prestadorServico->IdentificacaoPrestador->Cnpj, "###.###.###/####-##");
-        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'B'];
-        $this->pdf->textBox($x - 20, $y1, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 11, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // NOME/RAZÃO
+        $y += 5;
+        $w = round($maxW * 0.40, 0);
+        $texto = "NOME/RAZÃO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->prestadorServico->RazaoSocial;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 16, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // ENDEREÇO
+        $y += 5;
+        $texto = "ENDEREÇO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $numero = (string)$this->prestadorServico->Endereco->Numero ?: "N/A";
+        $texto = "{$this->prestadorServico->Endereco->Endereco}, {$numero}, {$this->prestadorServico->Endereco->Bairro}";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 13, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // COMPLEMENTO
+        $y += 5;
+        $texto = "COMPLEMENTO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string)$this->prestadorServico->Endereco->Complemento;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 18, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // INSCRIÇÃO ESTADUAL
+        $y = 38;
+        $x += 70;
+        $texto = "INSCRICAO MUNICIPAL:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->prestadorServico->IdentificacaoPrestador->InscricaoMunicipal;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 26, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
 
         return $y;
     }
@@ -533,7 +576,6 @@ class Danfse extends DaCommon
         float $w,
         float $h
     ): void {
-        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $this->pdf->textBox($x, $y, $w, $h);
     }
 }

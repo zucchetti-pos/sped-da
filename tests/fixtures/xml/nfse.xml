@@ -1,89 +1,90 @@
-<?xml version="1.0" encoding="UTF-8"?><CompNfse>
-<Nfse>
-<InfNfse id="63803">
-<Numero>202200000000092</Numero>
-<Serie>A1</Serie>
-<CodigoVerificacao>AXWE-9OQ5</CodigoVerificacao>
-<DataEmissao>2022-10-13T10:11:00</DataEmissao>
-<IdentificacaoRps>
-<Numero>285</Numero>
-<Serie>1</Serie>
-<Tipo>1</Tipo>
-</IdentificacaoRps>
-<DataEmissaoRps>2022-10-13</DataEmissaoRps>
-<NaturezaOperacao>1</NaturezaOperacao>
-<OptanteSimplesNacional>2</OptanteSimplesNacional>
-<IncentivadorCultural>2</IncentivadorCultural>
-<Competencia>2022-10</Competencia>
-<OutrasInformacoes>- DECLARAA A O EFETUADA EM AMBIENTE DE TESTES, SEM VALIDADE LEGAL.</OutrasInformacoes>
-<Servico>
-<Valores>
-<ValorServicos>100.00000</ValorServicos>
-<ValorDeducoes>0.00000</ValorDeducoes>
-<ValorPis>0.00000</ValorPis>
-<ValorCofins>0.00000</ValorCofins>
-<ValorInss>0.00000</ValorInss>
-<ValorIr>0.00000</ValorIr>
-<ValorCsll>0.00000</ValorCsll>
-<IssRetido>2</IssRetido>
-<ValorIss>3.00000</ValorIss>
-<ValorIssRetido>0.00000</ValorIssRetido>
-<OutrasRetencoes>0.00000</OutrasRetencoes>
-<BaseCalculo>100.00000</BaseCalculo>
-<Aliquota>3.00000</Aliquota>
-<ValorLiquidoNfse>100.00000</ValorLiquidoNfse>
-<DescontoIncondicionado>0.00000</DescontoIncondicionado>
-<DescontoCondicionado>0.00000</DescontoCondicionado>
-</Valores>
-<ItemListaServico>1401</ItemListaServico>
-<Discriminacao>LubrificaA A o</Discriminacao>
-<InformacoesComplementares></InformacoesComplementares>
-<CodigoMunicipio>1200104</CodigoMunicipio>
-</Servico>
-<PrestadorServico>
-<IdentificacaoPrestador>
-<Cnpj>10876469000142</Cnpj>
-<InscricaoMunicipal>35704</InscricaoMunicipal>
-</IdentificacaoPrestador>
-<RazaoSocial>Diego SoluA A es</RazaoSocial>
-<Endereco>
-<Endereco>Centro</Endereco>
-<Numero></Numero>
-<Complemento></Complemento>
-<Bairro>Centro</Bairro>
-<CodigoMunicipio>1234567</CodigoMunicipio>
-<Uf>SC</Uf>
-<Cep>89801300</Cep>
-</Endereco>
-<Contato></Contato>
-</PrestadorServico>
-<TomadorServico>
-<IdentificacaoTomador>
-<CpfCnpj>
-<Cnpj>07042937000179</Cnpj>
-</CpfCnpj>
-</IdentificacaoTomador>
-<RazaoSocial>Compufour</RazaoSocial>
-<NomeFantasia>RazaoSocialTeste</NomeFantasia>
-<Endereco>
-<Endereco>logradouro tomador</Endereco>
-<Numero>231</Numero>
-<Complemento></Complemento>
-<Bairro>Bairro teste</Bairro>
-<CodigoMunicipio>4318903</CodigoMunicipio>
-<Uf>RS</Uf>
-<Cep>97800000</Cep>
-</Endereco>
-<Contato>
-<Email>adadsa@gmail.com</Email>
-</Contato>
-</TomadorServico>
-<OrgaoGerador>
-<CodigoMunicipio>1234567</CodigoMunicipio>
-<Uf>SC</Uf>
-</OrgaoGerador>
-<LinkVisualizacaoNfse>http://nfse-teste.publica.inf.br/homologa_nfse/NFES?bmV3=ZTE4OTQ3MWI1MDEyNjc3YTYzOTFhNTJkOTIxZTlmYjfCo25mcF9pZCM2MzgwMw%3D%3D</LinkVisualizacaoNfse>
-</InfNfse>
-</Nfse>
-<NfseCancelamento></NfseCancelamento>
+<?xml version="1.0" encoding="UTF-8"?>
+<CompNfse>
+    <Nfse>
+        <InfNfse id="63803">
+            <Numero>202200000000092</Numero>
+            <Serie>A1</Serie>
+            <CodigoVerificacao>AXWE-9OQ5</CodigoVerificacao>
+            <DataEmissao>2022-10-13T10:11:00</DataEmissao>
+            <IdentificacaoRps>
+                <Numero>285</Numero>
+                <Serie>1</Serie>
+                <Tipo>1</Tipo>
+            </IdentificacaoRps>
+            <DataEmissaoRps>2022-10-13</DataEmissaoRps>
+            <NaturezaOperacao>1</NaturezaOperacao>
+            <OptanteSimplesNacional>2</OptanteSimplesNacional>
+            <IncentivadorCultural>2</IncentivadorCultural>
+            <Competencia>2022-10</Competencia>
+            <OutrasInformacoes>- DECLARAA A O EFETUADA EM AMBIENTE DE TESTES, SEM VALIDADE LEGAL.</OutrasInformacoes>
+            <Servico>
+                <Valores>
+                    <ValorServicos>100.00000</ValorServicos>
+                    <ValorDeducoes>0.00000</ValorDeducoes>
+                    <ValorPis>0.00000</ValorPis>
+                    <ValorCofins>0.00000</ValorCofins>
+                    <ValorInss>0.00000</ValorInss>
+                    <ValorIr>0.00000</ValorIr>
+                    <ValorCsll>0.00000</ValorCsll>
+                    <IssRetido>2</IssRetido>
+                    <ValorIss>3.00000</ValorIss>
+                    <ValorIssRetido>0.00000</ValorIssRetido>
+                    <OutrasRetencoes>0.00000</OutrasRetencoes>
+                    <BaseCalculo>100.00000</BaseCalculo>
+                    <Aliquota>3.00000</Aliquota>
+                    <ValorLiquidoNfse>100.00000</ValorLiquidoNfse>
+                    <DescontoIncondicionado>0.00000</DescontoIncondicionado>
+                    <DescontoCondicionado>0.00000</DescontoCondicionado>
+                </Valores>
+                <ItemListaServico>1401</ItemListaServico>
+                <Discriminacao>LubrificaA A o</Discriminacao>
+                <InformacoesComplementares></InformacoesComplementares>
+                <CodigoMunicipio>1200104</CodigoMunicipio>
+            </Servico>
+            <PrestadorServico>
+                <IdentificacaoPrestador>
+                    <Cnpj>10876469000142</Cnpj>
+                    <InscricaoMunicipal>35704</InscricaoMunicipal>
+                </IdentificacaoPrestador>
+                <RazaoSocial>Diego Soluções Teste</RazaoSocial>
+                <Endereco>
+                    <Endereco>Centro</Endereco>
+                    <Numero>650</Numero>
+                    <Complemento>Complemento teste</Complemento>
+                    <Bairro>Centro</Bairro>
+                    <CodigoMunicipio>1234567</CodigoMunicipio>
+                    <Uf>SC</Uf>
+                    <Cep>89801300</Cep>
+                </Endereco>
+                <Contato></Contato>
+            </PrestadorServico>
+            <TomadorServico>
+                <IdentificacaoTomador>
+                    <CpfCnpj>
+                        <Cnpj>07042937000179</Cnpj>
+                    </CpfCnpj>
+                </IdentificacaoTomador>
+                <RazaoSocial>Compufour</RazaoSocial>
+                <NomeFantasia>RazaoSocialTeste</NomeFantasia>
+                <Endereco>
+                    <Endereco>logradouro tomador</Endereco>
+                    <Numero>231</Numero>
+                    <Complemento></Complemento>
+                    <Bairro>Bairro teste</Bairro>
+                    <CodigoMunicipio>4318903</CodigoMunicipio>
+                    <Uf>RS</Uf>
+                    <Cep>97800000</Cep>
+                </Endereco>
+                <Contato>
+                    <Email>adadsa@gmail.com</Email>
+                </Contato>
+            </TomadorServico>
+            <OrgaoGerador>
+                <CodigoMunicipio>1234567</CodigoMunicipio>
+                <Uf>SC</Uf>
+            </OrgaoGerador>
+            <LinkVisualizacaoNfse>http://nfse-teste.publica.inf.br/homologa_nfse/NFES?bmV3=ZTE4OTQ3MWI1MDEyNjc3YTYzOTFhNTJkOTIxZTlmYjfCo25mcF9pZCM2MzgwMw%3D%3D</LinkVisualizacaoNfse>
+        </InfNfse>
+    </Nfse>
+    <NfseCancelamento></NfseCancelamento>
 </CompNfse>
