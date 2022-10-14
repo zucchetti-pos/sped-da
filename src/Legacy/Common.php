@@ -134,6 +134,18 @@ class Common
         }
     }
 
+    public function toDate(string $input, ?bool $hours = false): ?string
+    {
+        try {
+            if ($hours)
+                return \DateTime::createFromFormat("Y-m-d\TH:i:s", $input)->format("d/m/Y H:i:s");
+
+            return \DateTime::createFromFormat("Y-m-d\TH:i:s", $input)->format("d/m/Y");
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     /**
      * Função de formatação de strings onde o cerquilha # é um coringa
      * que será substituido por digitos contidos em campo.
