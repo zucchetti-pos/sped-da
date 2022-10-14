@@ -499,12 +499,13 @@ class Danfse extends DaCommon
             $tw = $w;
         }
 
+        $y1 = $y - 5;
         $texto = "CPF/CNPJ: ";
         $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
-        $this->pdf->textBox($x - 40, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+        $this->pdf->textBox($x - 40, $y1, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
         $texto = $this->formatField($this->prestadorServico->IdentificacaoPrestador->Cnpj, "###.###.###/####-##");
         $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'B'];
-        $this->pdf->textBox($x - 20, $y, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+        $this->pdf->textBox($x - 20, $y1, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
 
         return $y;
     }
