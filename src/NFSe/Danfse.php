@@ -314,9 +314,10 @@ class Danfse extends DaCommon
             $this->cabecalho($this->margesq, $this->margsup);
             $x = 25;
         }
-        // coloca o prestador
+        // Coloca o prestador
         $y = $this->prestador($x, $y);
-
+        // Colocar o tomador
+        $y = $this->tomador($x, $y);
         // //coloca o cabeçalho
         // $y = $this->header($x, $y, $pag, $totPag);
         // //coloca os dados do destinatário
@@ -540,6 +541,16 @@ class Danfse extends DaCommon
         $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
         $this->pdf->textBox($x + 18, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
 
+        // MUNICÍPIO
+        // Fazer função para pegar a cidade pelo código da cidade
+        $y += 5;
+        $texto = "MUNICÍPIO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = 'Concórdia';
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 13, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
         // INSCRIÇÃO ESTADUAL
         $y = 38;
         $x += 70;
@@ -549,6 +560,127 @@ class Danfse extends DaCommon
         $texto = (string) $this->prestadorServico->IdentificacaoPrestador->InscricaoMunicipal;
         $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
         $this->pdf->textBox($x + 26, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // CEP
+        $y += 5;
+        $texto = "CEP:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->prestadorServico->Endereco->Cep;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 6, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // UF
+        $y += 5;
+        $texto = "UF:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->prestadorServico->Endereco->Uf;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 4.5, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        return $y + 25;
+    }
+
+    private function tomador(float $x, float $y): float
+    {
+        if ($this->orientacao == 'P') {
+            $maxW = $this->wPrint;
+        } else {
+            $maxW = $this->wPrint - $this->wCanhoto;
+        }
+
+        $w     = $maxW;
+        $h     = 6;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        if ($this->orientacao == 'P') {
+            $this->drawBox($x, $y, $w, $h);
+            $texto = "TOMADOR DE SERVIÇOS";
+            $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => 'B'];
+            $this->pdf->textBox($x, $y - 0.3, $w, $h, $texto, $aFont, 'C', 'C', 0, '', false);
+        }
+
+        $y += $h;
+        $h = 25;
+        $this->drawBox($x, $y, $w, $h);
+
+        // CPF/CNPJ
+        $x += 5;
+        $h = 10;
+        $w = round($maxW * 0.15, 0);
+        $texto = "CPF/CNPJ:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = $this->formatField($this->tomadorServico->IdentificacaoTomador->CpfCnpj->Cnpj, "###.###.###/####-##");
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 11, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // NOME/RAZÃO
+        $y += 5;
+        $w = round($maxW * 0.40, 0);
+        $texto = "NOME/RAZÃO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->tomadorServico->RazaoSocial;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 16, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // ENDEREÇO
+        $y += 5;
+        $texto = "ENDEREÇO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $numero = (string)$this->tomadorServico->Endereco->Numero ?: "N/A";
+        $texto = "{$this->tomadorServico->Endereco->Endereco}, {$numero}, {$this->tomadorServico->Endereco->Bairro}";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 13, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // COMPLEMENTO
+        $y += 5;
+        $texto = "COMPLEMENTO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string)$this->tomadorServico->Endereco->Complemento;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 18, $y, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // MUNICÍPIO
+        // Fazer função para pegar a cidade pelo código da cidade
+        $x += 100;
+        $y1 = $y - 15;
+        $texto = "MUNICÍPIO:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = 'Concórdia';
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 13, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // NOME FANTASIA
+        $y1 += 5;
+        $texto = "NOME FANTASIA:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->tomadorServico->NomeFantasia;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 19, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // CEP
+        $y1 += 5;
+        $texto = "CEP:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->tomadorServico->Endereco->Cep;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 5.5, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+
+        // UF
+        $y1 += 5;
+        $texto = "UF:";
+        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $this->pdf->textBox($x, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
+        $texto = (string) $this->tomadorServico->Endereco->Uf;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+        $this->pdf->textBox($x + 4.5, $y1, $w, $h, $texto, $aFont, 'C', 'L', 0, '', false);
 
         return $y;
     }
