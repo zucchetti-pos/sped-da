@@ -2767,7 +2767,7 @@ class Danfe extends DaCommon
         $this->pdf->line($x + $w1, $y, $x + $w1, $y + $hmax);
         //DESCRIÇÃO DO PRODUTO / SERVIÇO
         $x     += $w1;
-        $w2    = round($w * 0.24, 0);
+        $w2    = round($w * 0.25, 0);
         $texto = 'DESCRIÇÃO DO PRODUTO / SERVIÇO';
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $this->pdf->textBox($x, $y, $w2, $h, $texto, $aFont, 'C', 'C', 0, '', false);
@@ -2805,7 +2805,7 @@ class Danfe extends DaCommon
         $this->pdf->line($x + $w6, $y, $x + $w6, $y + $hmax);
         //QUANT
         $x     += $w6;
-        $w7    = round($w * 0.08, 0);
+        $w7    = round($w * 0.07, 0);
         $texto = 'QUANT';
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $this->pdf->textBox($x, $y, $w7, $h, $texto, $aFont, 'C', 'C', 0, '', false);
@@ -3712,7 +3712,7 @@ class Danfe extends DaCommon
         if (!$this->gerarInformacoesAutomaticas) {
             return '';
         }
-        $formaNfeRef = "\r\nNFe Ref.: série:%d número:%d emit:%s em %s [%s]";
+        $formaNfeRef = "\r\nNFe Ref.: série:%d Núm:%d Chave: %s";
         $formaCTeRef = "\r\nCTe Ref.: série:%d número:%d emit:%s em %s [%s]";
         $formaNfRef  = "\r\nNF  Ref.: série:%d numero:%d emit:%s em %s modelo: %d";
         $formaECFRef = "\r\nECF Ref.: modelo: %s ECF:%d COO:%d";
@@ -3737,7 +3737,7 @@ class Danfe extends DaCommon
                 $cnpj          = $this->formatField(substr($chave_acesso, 6, 14), "##.###.###/####-##");
                 $serie         = substr($chave_acesso, 22, 3);
                 $numero        = substr($chave_acesso, 25, 9);
-                $saida         .= sprintf($formaNfeRef, $serie, $numero, $cnpj, $data, $chave_acessoF);
+                $saida         .= sprintf($formaNfeRef, $serie, $numero, $chave_acessoF);
             }
             $refNF = $nfRef->getElementsByTagName('refNF');
             foreach ($refNF as $umaRefNFe) {
