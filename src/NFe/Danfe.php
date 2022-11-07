@@ -1033,6 +1033,18 @@ class Danfe extends DaCommon
             $y1     = $y1 + 5;
             $aFont  = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
             $fone = $this->getTagValue($this->enderEmit, "fone")!=""? $this->formatFone($this->enderEmit):'';
+            if (strlen($fone) > 0) {
+                if (strlen($fone) == 10) {
+                    $fone = $this->formatField($fone, "(##) ####-####");
+                }
+                if (strlen($fone) > 10 && substr($fone, 0, 4) != '0800') {
+                    $fone = $this->formatField($fone, "(##) #####-####");
+                } 
+        
+                if (substr($fone, 0, 4) == '0800') { 
+                    $fone = $this->formatField($fone, "#### ### ####"); 
+                }
+            }
             $lgr    = $this->getTagValue($this->enderEmit, "xLgr");
             $nro    = $this->getTagValue($this->enderEmit, "nro");
             $cpl    = $this->getTagValue($this->enderEmit, "xCpl", " - ");
