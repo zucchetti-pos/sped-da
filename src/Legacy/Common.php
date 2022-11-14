@@ -134,6 +134,25 @@ class Common
         }
     }
 
+    protected function formatPhone($fone)
+    {
+        if (strlen($fone) > 0) {
+            if (strlen($fone) > 10 && substr($fone, 0, 4) != '0800') {
+                $fone = $this->formatField($fone, "(##) #####-####");
+            } 
+
+            if (strlen($fone) == 10) {
+                $fone = $this->formatField($fone, "(##) ####-####");
+            }
+    
+            if (substr($fone, 0, 4) == '0800') {
+                $fone = $this->formatField($fone, "#### ### ####"); 
+            }
+            
+            return $fone;
+        }
+    }
+
     /**
      * Função de formatação de strings onde o cerquilha # é um coringa
      * que será substituido por digitos contidos em campo.
