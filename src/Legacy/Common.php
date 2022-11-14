@@ -150,7 +150,6 @@ class Common
         if (substr($fone, 0, 4) == $phone0800) {
             $fone = $this->formatField($fone, "#### ### ####"); 
         }
-        
         return $fone;
     }
 
