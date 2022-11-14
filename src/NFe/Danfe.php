@@ -1035,18 +1035,7 @@ class Danfe extends DaCommon
             $fone   = !empty($this->enderEmit->getElementsByTagName("fone")->item(0)->nodeValue)
                 ? $this->enderEmit->getElementsByTagName("fone")->item(0)->nodeValue
                 : '';
-            if (strlen($fone) > 0) {
-                if (strlen($fone) == 10) {
-                    $fone = $this->formatField($fone, "(##) ####-####");
-                }
-                if (strlen($fone) > 10 && substr($fone, 0, 4) != '0800') {
-                    $fone = $this->formatField($fone, "(##) #####-####");
-                } 
-        
-                if (substr($fone, 0, 4) == '0800') { 
-                    $fone = $this->formatField($fone, "#### ### ####"); 
-                }
-            }
+            $fone  = $this->formatPhone($fone);
             $lgr    = $this->getTagValue($this->enderEmit, "xLgr");
             $nro    = $this->getTagValue($this->enderEmit, "nro");
             $cpl    = $this->getTagValue($this->enderEmit, "xCpl", " - ");
