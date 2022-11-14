@@ -154,7 +154,6 @@ class Common
         return $fone;
     }
 
-
     /**
      * Função de formatação de strings onde o cerquilha # é um coringa
      * que será substituido por digitos contidos em campo.
