@@ -143,11 +143,10 @@ class Common
         }
         if (strlen($fone) > 10 && substr($fone, 0, 4) != $phone0800) {
             $fone = $this->formatField($fone, "(##) #####-####");
-        } 
+        }
         if (strlen($fone) == 10) {
             $fone = $this->formatField($fone, "(##) ####-####");
         }
-
         if (substr($fone, 0, 4) == $phone0800) {
             $fone = $this->formatField($fone, "#### ### ####"); 
         }
