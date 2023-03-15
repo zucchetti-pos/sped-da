@@ -112,7 +112,7 @@ class Danfe extends DaCommon
      *
      * @var string
      */
-    protected $formatoChave = "#### #### #### #### #### #### #### #### #### #### ####";
+    protected $formatoChave = "############################################";
     /**
      * quantidade de itens já processados na montagem do DANFE
      *
@@ -3701,84 +3701,160 @@ class Danfe extends DaCommon
         if (!$this->gerarInformacoesAutomaticas) {
             return '';
         }
-        $formaNfeRef = "\r\nNFe Ref.: série:%d Núm:%d Chave: %s";
-        $formaCTeRef = "\r\nCTe Ref.: série:%d número:%d emit:%s em %s [%s]";
-        $formaNfRef  = "\r\nNF  Ref.: série:%d numero:%d emit:%s em %s modelo: %d";
-        $formaECFRef = "\r\nECF Ref.: modelo: %s ECF:%d COO:%d";
-        $formaNfpRef = "\r\nNFP Ref.: série:%d número:%d emit:%s em %s modelo: %d IE:%s";
         $saida       = '';
         $nfRefs      = $this->ide->getElementsByTagName('NFref');
         if (0 === $nfRefs->length) {
             return $saida;
         }
-        if ($nfRefs->length > 2) {
-            return 'Existem mais de 2 NF/NFe/ECF/NFP/CTe referenciadas, não serão exibidas na DANFE.';
+        if ($nfRefs->length > 12) {
+            return 'Existem mais de 12 NF/NFe/ECF/NFP/CTe referenciadas, não serão exibidas na DANFE.';
         }
+
+        $refNFes = [];
+        $refNFs = [];
+        $refCTes = [];
+        $refECFs = [];
+        $refNFPs = [];
         foreach ($nfRefs as $nfRef) {
             if (empty($nfRef)) {
                 continue;
             }
             $refNFe = $nfRef->getElementsByTagName('refNFe');
             foreach ($refNFe as $chave_acessoRef) {
-                $chave_acesso  = $chave_acessoRef->nodeValue;
-                $chave_acessoF = $this->formatField($chave_acesso, $this->formatoChave);
-                $data          = substr($chave_acesso, 4, 2) . "/20" . substr($chave_acesso, 2, 2);
-                $cnpj          = $this->formatField(substr($chave_acesso, 6, 14), "##.###.###/####-##");
-                $serie         = substr($chave_acesso, 22, 3);
-                $numero        = substr($chave_acesso, 25, 9);
-                $saida         .= sprintf($formaNfeRef, $serie, $numero, $chave_acessoF);
+                $chave_acesso = $chave_acessoRef->nodeValue;
+                $refNFes[] = [
+                    'chave_acessoF' => $this->formatField($chave_acesso, $this->formatoChave),
+                    'data'          => substr($chave_acesso, 4, 2) . "/20" . substr($chave_acesso, 2, 2),
+                    'cnpj'          => $this->formatField(substr($chave_acesso, 6, 14), "##.###.###/####-##"),
+                    'serie'         => substr($chave_acesso, 22, 3),
+                    'numero'        => substr($chave_acesso, 25, 9)
+                ];
             }
             $refNF = $nfRef->getElementsByTagName('refNF');
             foreach ($refNF as $umaRefNFe) {
-                $data   = $umaRefNFe->getElementsByTagName('AAMM')->item(0)->nodeValue;
-                $cnpj   = $umaRefNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue;
-                $mod    = $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue;
-                $serie  = $umaRefNFe->getElementsByTagName('serie')->item(0)->nodeValue;
-                $numero = $umaRefNFe->getElementsByTagName('nNF')->item(0)->nodeValue;
-                $data   = substr($data, 2, 2) . "/20" . substr($data, 0, 2);
-                $cnpj   = $this->formatField($cnpj, "##.###.###/####-##");
-                $saida  .= sprintf($formaNfRef, $serie, $numero, $cnpj, $data, $mod);
+                $cnpj = $umaRefNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                $data = $umaRefNFe->getElementsByTagName('AAMM')->item(0)->nodeValue;
+                $refNFs[] = [
+                    'mod'    => $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue,
+                    'serie'  => $umaRefNFe->getElementsByTagName('serie')->item(0)->nodeValue,
+                    'numero' => $umaRefNFe->getElementsByTagName('nNF')->item(0)->nodeValue,
+                    'data'   => substr($data, 2, 2) . "/20" . substr($data, 0, 2),
+                    'cnpj'   => $this->formatField($cnpj, "##.###.###/####-##")
+                ];
             }
             $refCTe = $nfRef->getElementsByTagName('refCTe');
             foreach ($refCTe as $chave_acessoRef) {
-                $chave_acesso  = $chave_acessoRef->nodeValue;
-                $chave_acessoF = $this->formatField($chave_acesso, $this->formatoChave);
-                $data          = substr($chave_acesso, 4, 2) . "/20" . substr($chave_acesso, 2, 2);
-                $cnpj          = $this->formatField(substr($chave_acesso, 6, 14), "##.###.###/####-##");
-                $serie         = substr($chave_acesso, 22, 3);
-                $numero        = substr($chave_acesso, 25, 9);
-                $saida         .= sprintf($formaCTeRef, $serie, $numero, $cnpj, $data, $chave_acessoF);
+                $chave_acesso = $chave_acessoRef->nodeValue;
+                $refCTes[] = [
+                    'chave_acessoF' => $this->formatField($chave_acesso, $this->formatoChave),
+                    'data'          => substr($chave_acesso, 4, 2) . "/20" . substr($chave_acesso, 2, 2),
+                    'cnpj'          => $this->formatField(substr($chave_acesso, 6, 14), "##.###.###/####-##"),
+                    'serie'         => substr($chave_acesso, 22, 3),
+                    'numero'        => substr($chave_acesso, 25, 9)
+                ];
             }
             $refECF = $nfRef->getElementsByTagName('refECF');
             foreach ($refECF as $umaRefNFe) {
-                $mod   = $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue;
-                $nECF  = $umaRefNFe->getElementsByTagName('nECF')->item(0)->nodeValue;
-                $nCOO  = $umaRefNFe->getElementsByTagName('nCOO')->item(0)->nodeValue;
-                $saida .= sprintf($formaECFRef, $mod, $nECF, $nCOO);
+                $refECFs[] = [
+                    'mod' => $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue,
+                    'nECF' => $umaRefNFe->getElementsByTagName('nECF')->item(0)->nodeValue,
+                    'nCOO' => $umaRefNFe->getElementsByTagName('nCOO')->item(0)->nodeValue                    
+                ];
             }
             $refNFP = $nfRef->getElementsByTagName('refNFP');
             foreach ($refNFP as $umaRefNFe) {
-                $data   = $umaRefNFe->getElementsByTagName('AAMM')->item(0)->nodeValue;
-                $cnpj   = !empty($umaRefNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue) ?
+                $data = $umaRefNFe->getElementsByTagName('AAMM')->item(0)->nodeValue;
+                $cnpj = !empty($umaRefNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue) ?
                     $umaRefNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue :
                     '';
-                $cpf    = !empty($umaRefNFe->getElementsByTagName('CPF')->item(0)->nodeValue) ?
+                $cpf = !empty($umaRefNFe->getElementsByTagName('CPF')->item(0)->nodeValue) ?
                     $umaRefNFe->getElementsByTagName('CPF')->item(0)->nodeValue : '';
-                $mod    = $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue;
-                $serie  = $umaRefNFe->getElementsByTagName('serie')->item(0)->nodeValue;
-                $numero = $umaRefNFe->getElementsByTagName('nNF')->item(0)->nodeValue;
-                $ie     = $umaRefNFe->getElementsByTagName('IE')->item(0)->nodeValue;
-                $data   = substr($data, 2, 2) . "/20" . substr($data, 0, 2);
                 if ($cnpj == '') {
                     $cpf_cnpj = $this->formatField($cpf, "###.###.###-##");
                 } else {
                     $cpf_cnpj = $this->formatField($cnpj, "##.###.###/####-##");
                 }
-                $saida .= sprintf($formaNfpRef, $serie, $numero, $cpf_cnpj, $data, $mod, $ie);
+                $refNFPs[] = [
+                    'mod'    => $umaRefNFe->getElementsByTagName('mod')->item(0)->nodeValue,
+                    'serie'  => $umaRefNFe->getElementsByTagName('serie')->item(0)->nodeValue,
+                    'numero' => $umaRefNFe->getElementsByTagName('nNF')->item(0)->nodeValue,
+                    'ie'     => $umaRefNFe->getElementsByTagName('IE')->item(0)->nodeValue,
+                    'data'   => substr($data, 2, 2) . "/20" . substr($data, 0, 2),
+                    'cpf_cnpj' => $cpf_cnpj
+                ];
+            }
+        }
+
+        $formaNfeRef = "\r\nNFe Ref.: Número: %d/%d Chave: %s";
+        $formaCTeRef = "\r\nCTe Ref.: Número: %d/%d Emit:%s em %s [%s]";
+        $formaNfRef  = "\r\nNF  Ref.: Número :%d/%d Emit:%s em %s Modelo: %d";
+        $formaECFRef = "\r\nECF Ref.: COO: %d ECF: %d Modelo: %s";
+        $formaNfpRef = "\r\nNFP Ref.: Número: %d/%d Emit:%s em %s Modelo: %d IE:%s";
+
+        if ($nfRefs->length > 2) {
+            $formaNfeRef = "%d/%d";
+            $formaCTeRef = "%d/%d";
+            $formaNfRef  = "%d/%d";
+            $formaECFRef = "%d/%d";
+            $formaNfpRef = "%d/%d";
+        }
+
+        if ($this->shouldShowTitle($refNFes, $nfRefs->length)){
+            $saida .= 'NFe Ref.: ';
+        }
+        foreach ($refNFes as $key => $refNFe) {
+            $saida .= sprintf($formaNfeRef, $refNFe['numero'], $refNFe['serie'], $refNFe['chave_acessoF']);
+            if ($key != array_key_last($refNFes)){
+                $saida .= ', ';
+            }
+        }
+
+        if ($this->shouldShowTitle($refNFs, $nfRefs->length)){
+            $saida .= 'NF Ref.: ';
+        }
+        foreach ($refNFs as $refNF) {
+            $saida .= sprintf($formaNfRef, $refNF['numero'], $refNF['serie'], $refNF['cnpj'], $refNF['data'], $refNF['mod']);
+            if ($key != array_key_last($refNFes)){
+                $saida .= ', ';
+            }
+        }
+
+        if ($this->shouldShowTitle($refCTes, $nfRefs->length)){
+            $saida .= 'CTe Ref.: ';
+        }
+        foreach ($refCTes as $refCTe) {
+            $saida .= sprintf($formaCTeRef, $refCTe['numero'], $refCTe['serie'], $refCTe['cnpj'], $refCTe['data'], $refCTe['chave_acessoF']);
+            if ($key != array_key_last($refNFes)){
+                $saida .= ', ';
+            }
+        }
+
+        if ($this->shouldShowTitle($refECFs, $nfRefs->length)){
+            $saida .= 'ECF Ref.: ';
+        }
+        foreach ($refECFs as $refECF) {
+            $saida .= sprintf($formaECFRef, $refECF['nCOO'], $refECF['nECF'], $refECF['mod']);
+            if ($key != array_key_last($refNFes)){
+                $saida .= ', ';
+            }
+        }
+
+        if ($this->shouldShowTitle($refNFPs, $nfRefs->length)){
+            $saida .= 'NFP Ref.: ';
+        }
+        foreach ($refNFPs as $refNFP) {
+            $saida .= sprintf($formaNfpRef, $refNFP['numero'], $refNFP['serie'], $refNFP['cpf_cnpj'], $refNFP['data'], $refNFP['mod'], $refNFP['ie']);
+            if ($key != array_key_last($refNFes)){
+                $saida .= ', ';
             }
         }
 
         return $saida;
+    }
+
+    private function shouldShowTitle(array $references, int $length): bool
+    {
+        return !empty($references) && $length > 2;
     }
 
     private function loadDoc($xml)
