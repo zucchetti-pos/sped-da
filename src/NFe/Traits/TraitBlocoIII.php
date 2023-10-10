@@ -12,7 +12,7 @@ trait TraitBlocoIII
         if ($this->flagResume) {
             return $y;
         }
-        $matrix = [0.12, $this->descPercent, 0.08, 0.09, 0.156, 0.156];
+        $matrix = [0.12, $this->descPercent, 0.09, 0.06, 0.13, 0.11, 0.13];
         //$aFont = ['font'=> $this->fontePadrao, 'size' => 7, 'style' => ''];
         //$this->pdf->textBox($this->margem, $y, $this->wPrint, $this->bloco3H, '', $aFont, 'T', 'C', true, '', false);
         $fsize = 7;
@@ -21,16 +21,16 @@ trait TraitBlocoIII
         }
         $aFont = ['font'=> $this->fontePadrao, 'size' => $fsize, 'style' => ''];
 
-        $texto = "Código";
+        $texto = "Cód";
         $x = $this->margem;
         $this->pdf->textBox($x, $y, ($this->wPrint * $matrix[0]), 3, $texto, $aFont, 'T', 'L', false, '', true);
 
         $texto = "Descrição";
-        $x1 = $x + ($this->wPrint * $matrix[0]);
+        $x1 = $x + ($this->wPrint * ($matrix[0] - 0.013));
         $this->pdf->textBox($x1, $y, ($this->wPrint * $matrix[1]), 3, $texto, $aFont, 'T', 'L', false, '', true);
 
         $texto = "Qtde";
-        $x2 = $x1 + ($this->wPrint * $matrix[1]);
+        $x2 = $x1 + ($this->wPrint * ($matrix[1] + 0.013));
         $this->pdf->textBox($x2, $y, ($this->wPrint * $matrix[2]), 3, $texto, $aFont, 'T', 'C', false, '', true);
 
         $texto = "UN";
@@ -41,9 +41,13 @@ trait TraitBlocoIII
         $x4 = $x3 + ($this->wPrint * $matrix[3]);
         $this->pdf->textBox($x4, $y, ($this->wPrint * $matrix[4]), 3, $texto, $aFont, 'T', 'C', false, '', true);
 
-        $texto = "Vl Total";
+        $texto = "Desc";
         $x5 = $x4 + ($this->wPrint * $matrix[4]);
         $y1 = $this->pdf->textBox($x5, $y, ($this->wPrint * $matrix[5]), 3, $texto, $aFont, 'T', 'R', false, '', true);
+
+        $texto = "Total";
+        $x6 = $x5 + ($this->wPrint * $matrix[5]);
+        $y1 = $this->pdf->textBox($x6, $y, ($this->wPrint * $matrix[6]), 3, $texto, $aFont, 'T', 'R', false, '', true);
 
         $y2 = $y + $y1;
         if ($this->det->length == 0) {
@@ -120,6 +124,19 @@ trait TraitBlocoIII
                     $y2,
                     ($this->wPrint * $matrix[5]),
                     $it->height,
+                    $it->vdesc,
+                    $aFont,
+                    'T',
+                    'R',
+                    false,
+                    '',
+                    true
+                );
+                $this->pdf->textBox(
+                    $x6,
+                    $y2,
+                    ($this->wPrint * $matrix[6]),
+                    $it->height,
                     $it->valor,
                     $aFont,
                     'T',
@@ -151,12 +168,13 @@ trait TraitBlocoIII
         } else {
             foreach ($this->det as $item) {
                 $prod = $item->getElementsByTagName("prod")->item(0);
-                $cProd      = $this->getTagValue($prod, "cProd");
+                $cProd      = $this->getTagValue($prod, "cEAN") ?? $this->getTagValue($prod, "cProd");
                 $xProd      = substr($this->getTagValue($prod, "xProd"), 0, 45);
-                $qCom       = (float) $this->getTagValue($prod, "qCom");
+                $qCom       = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "qCom"), $this->getQuantityDecimalPlaces());
                 $uCom       = $this->getTagValue($prod, "uCom");
-                $vUnCom     = number_format((float) $this->getTagValue($prod, "vUnCom"), 2, ",", ".");
-                $vProd      = number_format((float) $this->getTagValue($prod, "vProd"), 2, ",", ".");
+                $vUnCom     = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vUnCom"), $this->getPriceDecimalPlaces());
+                $vDesc      = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vDesc"), $this->getPriceDecimalPlaces());
+                $vProd      = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vProd"), $this->getPriceDecimalPlaces());
 
                 $tempPDF = new \NFePHP\DA\Legacy\Pdf(); // cria uma instancia temporaria da class pdf
                 $tempPDF->setFont($this->fontePadrao, '', $fsize); // seta a font do PDF
@@ -176,6 +194,7 @@ trait TraitBlocoIII
                     "qtd" => $qCom,
                     "un" => $uCom,
                     "vunit" => $vUnCom,
+                    "vdesc" => $vDesc,
                     "valor" => $vProd,
                     "height" => $h
                 ];
