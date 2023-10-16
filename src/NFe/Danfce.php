@@ -25,7 +25,7 @@ class Danfce extends DaCommon
 {
     protected $papel;
     protected $paperwidth = 80;
-    protected $descPercent = 0.30;
+    protected $descPercent = 0.34;
     protected $xml; // string XML NFe
     protected $dom;
     protected $logomarca = ''; // path para logomarca em jpg
@@ -68,16 +68,16 @@ class Danfce extends DaCommon
     protected $canceled = false;
     protected $submessage = null;
 
-    protected $bloco1H = 18.0; //cabecalho
-    protected $bloco2H = 12.0; //informação fiscal
+    protected $bloco1H = 17.0; //cabecalho
+    protected $bloco2H = 10.0; //informação fiscal
 
     protected $bloco3H = 0.0; //itens
     protected $bloco4H = 16.0; //totais
     protected $bloco5H = 0.0; //formas de pagamento
 
     protected $bloco6H = 10.0; //informação para consulta
-    protected $bloco7H = 25.0; //informações do consumidor
-    protected $bloco8H = 50.0; //informações do consumidor
+    protected $bloco7H = 14.0; //informações do consumidor
+    protected $bloco8H = 27.0; //informações do consumidor
     protected $bloco9H = 4.0; //informações sobre tributos
     protected $bloco10H = 5.0; //informações do integrador
 
@@ -215,11 +215,12 @@ class Danfce extends DaCommon
         //apenas para controle se necessário ser maior do que a margem superior
         $margSup = $this->margem;
         $margEsq = $this->margem;
+        $margDir = $this->margem;
         $margInf = $this->margem;
         // posição inicial do conteúdo, a partir do canto superior esquerdo da página
         $xInic = $margEsq;
         $yInic = $margSup;
-        $maxW = $this->paperwidth;
+        $maxW = $this->paperwidth - $margDir;
         $maxH = $tamPapelVert;
         //total inicial de paginas
         $totPag = 1;
