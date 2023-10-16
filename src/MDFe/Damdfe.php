@@ -26,7 +26,7 @@ class Damdfe extends DaCommon
     protected $yDados = 0;
     protected $xml; // string XML NFe
     protected $errMsg = ''; // mesagens de erro
-    protected $errStatus = false;// status de erro TRUE um erro ocorreu false sem erros
+    protected $errStatus = false; // status de erro TRUE um erro ocorreu false sem erros
     protected $formatoChave = "#### #### #### #### #### #### #### #### #### #### ####";
     protected $margemInterna = 2;
     protected $id;
@@ -167,11 +167,8 @@ class Damdfe extends DaCommon
             $this->aquav = $this->dom->getElementsByTagName("aquav")->item(0);
             $this->ferrov = $this->dom->getElementsByTagName("ferrov")->item(0);
             if (!empty($this->rodo)) {
-                $this->RNTRC = "";
                 $infANTT = $this->rodo->getElementsByTagName("infANTT")->item(0);
-                if (isset($infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue)) {
-                    $this->RNTRC = $infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue;
-                }
+                $this->RNTRC = empty($infANTT) ? null : $infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue;
             }
             $this->ciot = "";
             if ($this->dom->getElementsByTagName('CIOT')->item(0) != "") {
@@ -243,7 +240,7 @@ class Damdfe extends DaCommon
                 $maxH = 210;
                 $maxW = 297;
             }
-        }//orientação
+        } //orientação
         //largura imprimivel em mm
         $this->wPrint = $maxW - ($margEsq + $xInic);
         //comprimento imprimivel em mm
@@ -353,8 +350,8 @@ class Damdfe extends DaCommon
             $cpfcnpj = 'CNPJ: ' . $this->formatField($this->CNPJ, "###.###.###/####-##");
         }
         $ie = 'IE: ' . (strlen($this->IE) == 9
-                ? $this->formatField($this->IE, '###/#######')
-                : $this->formatField($this->IE, '###.###.###.###'));
+            ? $this->formatField($this->IE, '###/#######')
+            : $this->formatField($this->IE, '###.###.###.###'));
         $rntrc = empty($this->RNTRC) ? '' : ' - RNTRC: ' . $this->RNTRC;
         $lgr = 'Logradouro: ' . $this->xLgr;
         $nro = 'Nº: ' . $this->nro;
@@ -446,7 +443,8 @@ class Damdfe extends DaCommon
             $retEvento = $this->mdfeProc->getElementsByTagName('retEventoMDFe')->item(0);
             $cStat = $this->getTagValue($this->mdfeProc, "cStat");
             $tpEvento = $this->getTagValue($this->mdfeProc, "tpEvento");
-            if ($cStat == '101'
+            if (
+                $cStat == '101'
                 || $cStat == '151'
                 || $cStat == '135'
                 || $cStat == '155'
@@ -455,7 +453,8 @@ class Damdfe extends DaCommon
                 $resp['status'] = false;
                 $resp['valida'] = false;
                 $resp['message'][] = "MDFe CANCELADA";
-            } elseif (($cStat == '103'
+            } elseif (
+                ($cStat == '103'
                     || $cStat == '136'
                     || $cStat == '135'
                     || $cStat == '155'
@@ -470,12 +469,14 @@ class Damdfe extends DaCommon
                 $tpEvento = $this->getTagValue($infEvento, "tpEvento");
                 $dhEvento = date("d/m/Y H:i:s", $this->toTimestamp($this->getTagValue($infEvento, "dhRegEvento")));
                 $nProt = $this->getTagValue($infEvento, "nProt");
-                if ($tpEvento == '110111'
+                if (
+                    $tpEvento == '110111'
                     && ($cStat == '101'
                         || $cStat == '151'
                         || $cStat == '135'
                         || $cStat == '155'
-                    )) {
+                    )
+                ) {
                     $resp['status'] = false;
                     $resp['valida'] = false;
                     $resp['message'][] = "MDFe CANCELADA";
@@ -571,8 +572,8 @@ class Damdfe extends DaCommon
             $cpfcnpj = 'CNPJ: ' . $this->formatField($this->CNPJ, "###.###.###/####-##");
         }
         $ie = 'IE: ' . (strlen($this->IE) == 9
-                ? $this->formatField($this->IE, '###/#######')
-                : $this->formatField($this->IE, '###.###.###.###'));
+            ? $this->formatField($this->IE, '###/#######')
+            : $this->formatField($this->IE, '###.###.###.###'));
         $rntrc = empty($this->RNTRC) ? '' : ' - RNTRC: ' . $this->RNTRC;
         $lgr = 'Logradouro: ' . $this->xLgr;
         $nro = 'Nº: ' . $this->nro;
@@ -788,7 +789,8 @@ class Damdfe extends DaCommon
         $x1 += $x2;
         $this->pdf->textBox($x1, $y, $x2, 10, '', $this->baseFont, 'T', 'L', 0, '', 0, 0, 0, 1);
 
-        if ($this->rodo
+        if (
+            $this->rodo
             || $this->aereo
             || $this->ferrov
         ) {
