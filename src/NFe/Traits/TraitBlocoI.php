@@ -38,8 +38,8 @@ trait TraitBlocoI
             $xImg = $this->margem;
             $yImg = $this->margem + 1;
             $logoInfo = getimagesize($this->logomarca);
-            $logoWmm = ($logoInfo[0] / 72) * 25.4;
-            $logoHmm = ($logoInfo[1] / 72) * 25.4;
+            $logoWmm = ($logoInfo[0] / 75) * 25.4;
+            $logoHmm = ($logoInfo[1] / 75) * 25.4;
             $nImgW = $this->wPrint / 4;
             $nImgH = round($logoHmm * ($nImgW / $logoWmm), 0);
             if ($nImgH > $maxHimg) {
