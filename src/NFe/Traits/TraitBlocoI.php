@@ -33,7 +33,7 @@ trait TraitBlocoI
         }
 
         $h = 0;
-        $maxHimg = $this->bloco1H - 4;
+        $maxHimg = $this->bloco1H - 6;
         if (!empty($this->logomarca)) {
             $xImg = $this->margem;
             $yImg = $this->margem + 1;
