@@ -28,8 +28,12 @@ trait TraitBlocoXI
 
         foreach ($bandpgto as $p) {
             $p['bandeira'] = $p['bandeira'] ? $this->flagDescription($p['bandeira']) : null;
-            if ($p['bandeira']) {
-                $texto = 'Band. ' . $p['bandeira'] . ' Nº Aut. ' . $p['autorizacao'] . ' R$: ' . $valor;
+            if ($p['autorizacao']) {
+
+                $texto = '';
+                if ($p['bandeira']) $texto .= 'Band. ' . $p['bandeira'];
+                $texto .= ' Nº Aut. ' . str_pad($p['autorizacao'], 6, '0', STR_PAD_LEFT) . ' R$: ' . $valor;
+
                 $this->pdf->textBox($this->margem, $y, $this->wPrint, 3, $texto, $aFont, 'T', 'C', false, '', false);
             }
         }
