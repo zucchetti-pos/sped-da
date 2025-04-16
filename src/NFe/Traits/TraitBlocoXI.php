@@ -34,7 +34,7 @@ trait TraitBlocoXI
                 if ($p['bandeira']) $texto .= 'Band. ' . $p['bandeira'];
                 $texto .= ' Nº Aut. ' . str_pad($p['autorizacao'], 6, '0', STR_PAD_LEFT) . ' R$: ' . $valor;
 
-                $this->pdf->textBox($this->margem, $y, $this->wPrint, 3, $texto, $aFont, 'T', 'C', false, '', false);
+                $this->pdf->textBox($this->margem, $y - 3, $this->wPrint, 3, $texto, $aFont, 'T', 'C', false, '', false);
             }
         }
 
