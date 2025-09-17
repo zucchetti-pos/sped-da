@@ -64,7 +64,7 @@ trait Bloco6
             $x6 = $x5 + ($this->wPrint * $headerPercentage[5]);
 
             $this->pdf->textBox($x, $y2, ($this->wPrint * $headerPercentage[0]), $it->height, $it->codigo, $aFont, 'T', 'L', false, '', true);
-            $this->pdf->textBox($x1, $y2, ($this->wPrint * $headerPercentage[1]), $it->height, $it->desc, $aFont, 'T', 'L', false, '', false);
+            $this->pdf->textBox($x1, $y2, ($this->wPrint * $headerPercentage[1]), $it->height, $it->desc, $aFont, 'T', 'L', false, '', true);
             $this->pdf->textBox($x2, $y2, ($this->wPrint * $headerPercentage[2]), $it->height, $it->qtd, $aFont, 'T', 'R', false, '', true);
             $this->pdf->textBox($x3, $y2, ($this->wPrint * $headerPercentage[3]), $it->height, $it->un, $aFont, 'T', 'C', false, '', true);
             $this->pdf->textBox($x4, $y2, ($this->wPrint * $headerPercentage[4]), $it->height, $it->vunit, $aFont, 'T', 'R', false, '', true);
