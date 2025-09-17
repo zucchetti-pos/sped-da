@@ -15,7 +15,7 @@ trait Bloco3
         $emitFone = $this->formatPhone($this->getTagValue($this->enderEmit, "fone"));
         $emitEndereco = $this->formatEndereco();
 
-        $h = 20;
+        $h = 15;
         $maxHimg = $h - 2;
         [$xRs, $wRs, $y] = $this->processLogo($y, $h, $maxHimg);
 
@@ -81,7 +81,7 @@ trait Bloco3
         $logoInfo = getimagesize($imagePath);
         $logoWmm = ($logoInfo[0] / 72) * 25.4;
         $logoHmm = ($logoInfo[1] / 72) * 25.4;
-        $nImgW = $this->wPrint / 4;
+        $nImgW = $this->wPrint / 6;
         $nImgH = round($logoHmm * ($nImgW / $logoWmm), 0);
 
         if ($nImgH > $maxHimg) {
