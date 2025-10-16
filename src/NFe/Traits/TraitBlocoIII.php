@@ -168,7 +168,8 @@ trait TraitBlocoIII
             foreach ($this->det as $item) {
                 $prod = $item->getElementsByTagName("prod")->item(0);
                 $cProd = str_pad($this->getTagValue($prod, "cProd"), 5, '0', STR_PAD_LEFT);
-                $xProd = substr($this->getTagValue($prod, "xProd"), 0, 30);
+                $limit = 120;
+                $xProd = substr($this->getTagValue($prod, "xProd"), 0, $limit);
                 $qCom = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "qCom"), $this->getQuantityDecimalPlaces());
                 $uCom = $this->getTagValue($prod, "uCom");
                 $vUnCom = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vUnCom"), $this->getPriceDecimalPlaces());
@@ -180,18 +181,14 @@ trait TraitBlocoIII
 
                 $descriptionWidth = round(($this->paperwidth - (4 * $this->margem)) * $this->descPercent, 2);
 
-                $n = $tempPDF->wordWrap($xProd, $descriptionWidth);
+                $p = $xProd;
+                $n = $tempPDF->wordWrap($p, $descriptionWidth);
+                $n = max(1, $n);
+                $h = $tempPDF->fontSize * $n;
 
-                $limit = 20;
+                $lineHeight = $tempPDF->fontSize;
+                $h = $lineHeight * $n;
 
-                while ($n > 2) {
-                    $xProd = substr($this->getTagValue($prod, "xProd"), 0, $limit);
-                    $p = $xProd;
-                    $tempPDF->wordWrap($p, $descriptionWidth, true);
-                    $n -= 1;
-                }
-                $marginReduction = $this->paperwidth === 58 ? 2.4 : 0.4;
-                $h = ($hfont * $n) - $marginReduction;
                 $this->itens[] = [
                     "codigo" => $cProd,
                     "desc" => $xProd,
@@ -205,6 +202,6 @@ trait TraitBlocoIII
                 $htot += $h;
             }
         }
-        return $htot + 3;
+        return $htot + 4;
     }
 }
