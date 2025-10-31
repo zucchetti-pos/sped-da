@@ -57,7 +57,7 @@ trait TraitBlocoIII
                     $x,
                     $y2,
                     ($this->wPrint * $matrix[0]),
-                    $it->height,
+                    $it->descHeight,
                     $it->codigo,
                     $aFont,
                     'T',
@@ -70,7 +70,7 @@ trait TraitBlocoIII
                     $x1,
                     $y2,
                     ($this->wPrint * $matrix[1]),
-                    $it->height,
+                    $it->descHeight,
                     $it->desc,
                     $aFont,
                     'T',
@@ -79,11 +79,12 @@ trait TraitBlocoIII
                     '',
                     false
                 );
+                $yNum = $y2 + $it->descHeight;
                 $this->pdf->textBox(
                     $x2,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[2]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->qtd,
                     $aFont,
                     'T',
@@ -94,9 +95,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x3,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[3]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->un,
                     $aFont,
                     'T',
@@ -107,9 +108,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x4,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[4]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->vunit,
                     $aFont,
                     'T',
@@ -120,9 +121,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x5,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[5]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->vdesc,
                     $aFont,
                     'T',
@@ -133,9 +134,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x6,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[6]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->valor,
                     $aFont,
                     'T',
@@ -144,7 +145,7 @@ trait TraitBlocoIII
                     '',
                     true
                 );
-                $y2 += $it->height;
+                $y2 += ($it->descHeight + $it->lineHeight);
             }
         }
         $this->pdf->dashedHLine($this->margem, $this->bloco3H + $y, $this->wPrint, 0.1, 30);
@@ -179,15 +180,17 @@ trait TraitBlocoIII
                 $tempPDF = new \NFePHP\DA\Legacy\Pdf(); // cria uma instancia temporaria da class pdf
                 $tempPDF->setFont($this->fontePadrao, '', $fsize); // seta a font do PDF
 
-                $descriptionWidth = round(($this->paperwidth - (4 * $this->margem)) * $this->descPercent, 2);
+                $codePercent = 0.12;
+                $usableWidth = ($this->wPrint > 0) ? $this->wPrint : max(1, ($this->paperwidth - (4 * $this->margem)));
+
+                $descriptionWidth = round($usableWidth * (1 - $codePercent), 2);
 
                 $p = $xProd;
                 $n = $tempPDF->wordWrap($p, $descriptionWidth);
                 $n = max(1, $n);
-                $h = $tempPDF->fontSize * $n;
 
                 $lineHeight = $tempPDF->fontSize;
-                $h = $lineHeight * $n;
+                $descHeight = $lineHeight * $n;
 
                 $this->itens[] = [
                     "codigo" => $cProd,
@@ -197,9 +200,11 @@ trait TraitBlocoIII
                     "vunit" => $vUnCom,
                     "vdesc" => $vDesc,
                     "valor" => $vProd,
-                    "height" => $h
+                    "descHeight" => $descHeight,
+                    "lineHeight" => $lineHeight,
+                    "height" => $descHeight + $lineHeight
                 ];
-                $htot += $h;
+                $htot += ($descHeight + $lineHeight);
             }
         }
         return $htot + 4;
