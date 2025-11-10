@@ -12,13 +12,15 @@ trait TraitBlocoIII
         if ($this->flagResume) {
             return $y;
         }
-        $matrix = [0.12, $this->descPercent, 0.10, 0.07, 0.13, 0.13, 0.13];
+        $codePercent = $this->getCodeColumnPercent();
+        $matrix = [$codePercent, $this->descPercent, 0.10, 0.07, 0.13, 0.13, 0.13];
         $fsize = 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
         }
         $aFont = ['font' => $this->fontePadrao, 'size' => $fsize, 'style' => ''];
         $bFont = ['font' => $this->fontePadrao, 'size' => $fsize, 'style' => 'B'];
+        $descriptionWidth = $this->getDescriptionBlockWidth();
 
         $texto = "Cód";
         $x = $this->margem;
@@ -69,7 +71,7 @@ trait TraitBlocoIII
                 $this->pdf->textBox(
                     $x1,
                     $y2,
-                    ($this->wPrint * $matrix[1]),
+                    $descriptionWidth,
                     $it->descHeight,
                     $it->desc,
                     $aFont,
@@ -157,6 +159,7 @@ trait TraitBlocoIII
         if ($this->flagResume) {
             return 0;
         }
+        $descriptionWidth = $this->normalizeDescriptionWidth($descriptionWidth);
         $fsize = 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
@@ -179,11 +182,6 @@ trait TraitBlocoIII
 
                 $tempPDF = new \NFePHP\DA\Legacy\Pdf(); // cria uma instancia temporaria da class pdf
                 $tempPDF->setFont($this->fontePadrao, '', $fsize); // seta a font do PDF
-
-                $codePercent = 0.12;
-                $usableWidth = ($this->wPrint > 0) ? $this->wPrint : max(1, ($this->paperwidth - (4 * $this->margem)));
-
-                $descriptionWidth = round($usableWidth * (1 - $codePercent), 2);
 
                 $p = $xProd;
                 $n = $tempPDF->wordWrap($p, $descriptionWidth);
@@ -208,5 +206,32 @@ trait TraitBlocoIII
             }
         }
         return $htot + 4;
+    }
+
+    protected function normalizeDescriptionWidth($descriptionWidth)
+    {
+        $fullWidth = $this->calculateFullDescriptionWidth();
+
+        if ($descriptionWidth <= 0) {
+            return $fullWidth;
+        }
+
+        return max($descriptionWidth, $fullWidth);
+    }
+
+    protected function getDescriptionBlockWidth()
+    {
+        return $this->normalizeDescriptionWidth($this->wPrint * $this->descPercent);
+    }
+
+    protected function calculateFullDescriptionWidth()
+    {
+        $usableWidth = ($this->wPrint > 0) ? $this->wPrint : max(1, ($this->paperwidth - (4 * $this->margem)));
+        return round($usableWidth * (1 - $this->getCodeColumnPercent()), 2);
+    }
+
+    protected function getCodeColumnPercent()
+    {
+        return 0.12;
     }
 }
