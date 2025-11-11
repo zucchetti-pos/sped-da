@@ -12,13 +12,15 @@ trait TraitBlocoIII
         if ($this->flagResume) {
             return $y;
         }
-        $matrix = [0.12, $this->descPercent, 0.10, 0.07, 0.13, 0.13, 0.13];
+        $codePercent = $this->getCodeColumnPercent();
+        $matrix = [$codePercent, $this->descPercent, 0.10, 0.07, 0.13, 0.13, 0.13];
         $fsize = 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
         }
         $aFont = ['font' => $this->fontePadrao, 'size' => $fsize, 'style' => ''];
         $bFont = ['font' => $this->fontePadrao, 'size' => $fsize, 'style' => 'B'];
+        $descriptionWidth = $this->getDescriptionBlockWidth();
 
         $texto = "Cód";
         $x = $this->margem;
@@ -57,7 +59,7 @@ trait TraitBlocoIII
                     $x,
                     $y2,
                     ($this->wPrint * $matrix[0]),
-                    $it->height,
+                    $it->descHeight,
                     $it->codigo,
                     $aFont,
                     'T',
@@ -69,8 +71,8 @@ trait TraitBlocoIII
                 $this->pdf->textBox(
                     $x1,
                     $y2,
-                    ($this->wPrint * $matrix[1]),
-                    $it->height,
+                    $descriptionWidth,
+                    $it->descHeight,
                     $it->desc,
                     $aFont,
                     'T',
@@ -79,11 +81,12 @@ trait TraitBlocoIII
                     '',
                     false
                 );
+                $yNum = $y2 + $it->descHeight;
                 $this->pdf->textBox(
                     $x2,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[2]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->qtd,
                     $aFont,
                     'T',
@@ -94,9 +97,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x3,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[3]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->un,
                     $aFont,
                     'T',
@@ -107,9 +110,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x4,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[4]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->vunit,
                     $aFont,
                     'T',
@@ -120,9 +123,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x5,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[5]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->vdesc,
                     $aFont,
                     'T',
@@ -133,9 +136,9 @@ trait TraitBlocoIII
                 );
                 $this->pdf->textBox(
                     $x6,
-                    $y2,
+                    $yNum,
                     ($this->wPrint * $matrix[6]),
-                    $it->height,
+                    $it->lineHeight,
                     $it->valor,
                     $aFont,
                     'T',
@@ -144,7 +147,7 @@ trait TraitBlocoIII
                     '',
                     true
                 );
-                $y2 += $it->height;
+                $y2 += ($it->descHeight + $it->lineHeight);
             }
         }
         $this->pdf->dashedHLine($this->margem, $this->bloco3H + $y, $this->wPrint, 0.1, 30);
@@ -156,6 +159,7 @@ trait TraitBlocoIII
         if ($this->flagResume) {
             return 0;
         }
+        $descriptionWidth = $this->normalizeDescriptionWidth($descriptionWidth);
         $fsize = 7;
         if ($this->paperwidth < 70) {
             $fsize = 5;
@@ -179,15 +183,12 @@ trait TraitBlocoIII
                 $tempPDF = new \NFePHP\DA\Legacy\Pdf(); // cria uma instancia temporaria da class pdf
                 $tempPDF->setFont($this->fontePadrao, '', $fsize); // seta a font do PDF
 
-                $descriptionWidth = round(($this->paperwidth - (4 * $this->margem)) * $this->descPercent, 2);
-
                 $p = $xProd;
                 $n = $tempPDF->wordWrap($p, $descriptionWidth);
                 $n = max(1, $n);
-                $h = $tempPDF->fontSize * $n;
 
                 $lineHeight = $tempPDF->fontSize;
-                $h = $lineHeight * $n;
+                $descHeight = $lineHeight * $n;
 
                 $this->itens[] = [
                     "codigo" => $cProd,
@@ -197,11 +198,40 @@ trait TraitBlocoIII
                     "vunit" => $vUnCom,
                     "vdesc" => $vDesc,
                     "valor" => $vProd,
-                    "height" => $h
+                    "descHeight" => $descHeight,
+                    "lineHeight" => $lineHeight,
+                    "height" => $descHeight + $lineHeight
                 ];
-                $htot += $h;
+                $htot += ($descHeight + $lineHeight);
             }
         }
         return $htot + 4;
+    }
+
+    protected function normalizeDescriptionWidth($descriptionWidth)
+    {
+        $fullWidth = $this->calculateFullDescriptionWidth();
+
+        if ($descriptionWidth <= 0) {
+            return $fullWidth;
+        }
+
+        return max($descriptionWidth, $fullWidth);
+    }
+
+    protected function getDescriptionBlockWidth()
+    {
+        return $this->normalizeDescriptionWidth($this->wPrint * $this->descPercent);
+    }
+
+    protected function calculateFullDescriptionWidth()
+    {
+        $usableWidth = ($this->wPrint > 0) ? $this->wPrint : max(1, ($this->paperwidth - (4 * $this->margem)));
+        return round($usableWidth * (1 - $this->getCodeColumnPercent()), 2);
+    }
+
+    protected function getCodeColumnPercent()
+    {
+        return 0.12;
     }
 }
