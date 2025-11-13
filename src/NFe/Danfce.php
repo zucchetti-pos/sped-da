@@ -333,7 +333,8 @@ class Danfce extends DaCommon
     private function calculatePaperLength()
     {
         $wprint = $this->paperwidth - (2 * $this->margem);
-        $this->bloco3H = $this->calculateHeightItens($wprint * $this->descPercent);
+        $descriptionWidth = $wprint * (1 - $this->getCodeColumnPercent());
+        $this->bloco3H = $this->calculateHeightItens($descriptionWidth);
         $this->bloco5H = $this->calculateHeightPag();
         $this->bloco9H = $this->calculateHeighBlokIX();
 
