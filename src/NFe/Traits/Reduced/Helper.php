@@ -88,12 +88,12 @@ trait Helper
 
     private function formatDiscount($prod)
     {
-        return $this->formatValueWithDecimalPlaces((float)$this->getTagValue($prod, "vDesc"), $this->getPriceDecimalPlaces());
+        return $this->formatValueWithDecimalPlaces((float)$this->getTagValue($prod, "vDesc"), 2);
     }
 
     private function formatProductValue($prod)
     {
-        return $this->formatValueWithDecimalPlaces((float)$this->getTagValue($prod, "vProd"), $this->getPriceDecimalPlaces());
+        return $this->formatValueWithDecimalPlaces((float)$this->getTagValue($prod, "vProd"), 2);
     }
 
     private function calculateItemHeight($xProd, $descriptionWidth, $fsize, $hfont)
