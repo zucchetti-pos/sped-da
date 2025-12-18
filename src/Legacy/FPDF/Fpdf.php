@@ -689,6 +689,7 @@ class Fpdf
     public function cell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
     {
         //Output a cell
+        $txt = mb_convert_encoding($txt, 'ISO-8859-1', 'UTF-8');
         $k = $this->k;
         if ($this->y+$h > $this->pageBreakTrigger
             && !$this->InHeader
