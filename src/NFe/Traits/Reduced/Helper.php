@@ -133,8 +133,8 @@ trait Helper
 
         $pdf = new \NFePHP\DA\Legacy\Pdf('P', 'mm', $papel);
 
-        $fontSize = 7;
-        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $fontSize = 8;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
 
         if ($this->paperwidth < 70) {
             $fontSize = 5;
@@ -144,7 +144,7 @@ trait Helper
         $textoTributos = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012)";
         $linhasCpl = str_replace(';', "\n", $this->infCpl);
 
-        $hfont = (imagefontheight($fontSize) / 72) * 15;
+        $hfont = (imagefontheight($fontSize) / 72) * 13;
 
         $numLinhas =
             (int) $pdf->getNumLines($textoTributos, $wprint, $aFont) +
