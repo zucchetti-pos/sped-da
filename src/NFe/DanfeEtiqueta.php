@@ -539,6 +539,19 @@ class DanfeEtiqueta extends DaCommon
         $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
         $y += $this->pdf->textBox($this->margem + 1, $y + 4, $this->wPrint, 6, $texto, $aFont, 'T', 'L', false, '', false);
         $texto = $this->infCpl . "\n" . $this->infAdFisco;
+
+        $alturaRestante = $this->hPrint - $y - 5;
+        $alturaLinha = 4;
+        $maxLinhas = floor($alturaRestante / $alturaLinha);
+        $charsPorLinha = 95;
+        $maxChars = $maxLinhas * $charsPorLinha;
+
+        $texto = trim($this->infCpl . "\n" . $this->infAdFisco);
+
+        if (mb_strlen($texto) > $maxChars) {
+            $texto = mb_substr($texto, 0, $maxChars - 3) . '...';
+        }
+
         $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => ''];
         $y += $this->pdf->textBox(
             $this->margem + 1,
@@ -553,6 +566,8 @@ class DanfeEtiqueta extends DaCommon
             '',
             false
         );
+
+        return $y;
     }
 
     /**
