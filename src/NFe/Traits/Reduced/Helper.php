@@ -144,7 +144,7 @@ trait Helper
         $textoTributos = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012)";
         $linhasCpl = str_replace(';', "\n", $this->infCpl);
 
-        $hfont = (imagefontheight($fontSize) / 72) * 13;
+        $hfont = (imagefontheight($fontSize) / 72) * 14;
 
         $numLinhas =
             (int) $pdf->getNumLines($textoTributos, $wprint, $aFont) +
