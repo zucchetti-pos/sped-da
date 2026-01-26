@@ -177,8 +177,8 @@ trait TraitBlocoIII
                 $qCom = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "qCom"), $this->getQuantityDecimalPlaces());
                 $uCom = $this->getTagValue($prod, "uCom");
                 $vUnCom = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vUnCom"), $this->getPriceDecimalPlaces());
-                $vDesc = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vDesc"), $this->getPriceDecimalPlaces());
-                $vProd = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vProd"), $this->getPriceDecimalPlaces());
+                $vDesc = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vDesc"), 2);
+                $vProd = $this->formatValueWithDecimalPlaces((float) $this->getTagValue($prod, "vProd"), 2);
 
                 $tempPDF = new \NFePHP\DA\Legacy\Pdf(); // cria uma instancia temporaria da class pdf
                 $tempPDF->setFont($this->fontePadrao, '', $fsize); // seta a font do PDF
