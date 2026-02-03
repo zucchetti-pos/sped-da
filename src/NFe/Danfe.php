@@ -142,13 +142,13 @@ class Danfe extends DaCommon
     protected $qtdeItensProc;
     /*
      * NF-e processada
-     * 
+     *
      * @var \DOMNode
      */
     protected $nfeProc;
     /*
      * Grupo de detalhamento da forma de pagamento
-     * 
+     *
      * @var \DOMNode
      */
     protected $detPag;
@@ -609,7 +609,6 @@ class Danfe extends DaCommon
             + ($linhasDup * $hduplicatas)
             + $himposto + $htransporte
             + ($linhaISSQN * $hissqn)
-            + $this->hdadosadic
             + $hfooter
             + $hCabecItens
             + $this->sizeExtraTextoFatura();
@@ -632,6 +631,18 @@ class Danfe extends DaCommon
         }
         //$hDispo1 += 14;
         $hDispo2 = $this->hPrint - ($hcabecalho + $hfooter + $hCabecItens);
+
+        // InfoComplementar fica sempre na ultima pagina ( se tiver 1 pagina, fica nela, se tiver mais de uma 1 pagina, vai pra ultima)
+        $hDispoLast = $hDispo2 - $this->hdadosadic;
+        if ($hDispoLast < $hCabecItens) {
+            $hDispoLast = $hCabecItens;
+        }
+
+        $hDispo1ComDados = $hDispo1 - $this->hdadosadic;
+        if ($hDispo1ComDados < $hCabecItens) {
+            $hDispo1ComDados = $hCabecItens;
+        }
+
         //Contagem da altura ocupada para impressão dos itens
         $aFont     = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
         $numlinhas = 0;
@@ -672,6 +683,13 @@ class Danfe extends DaCommon
             }
             $i++;
         } //fim da soma das areas de itens usadas
+
+        // Se itens + quadro final não couberem na última página, força criar nova página
+        $hUltimaDisponivel = ($totPag === 1) ? $hDispo1 : $hDispo2;
+        if (($hUsado + $this->hdadosadic) > $hUltimaDisponivel) {
+            $totPag++;
+        }
+
         $qtdeItens = $i; //controle da quantidade de itens no DANFE
         //montagem da primeira página
         $pag = 1;
@@ -728,7 +746,10 @@ class Danfe extends DaCommon
         //itens da DANFE
         $nInicial = 0;
 
-        $y = $this->itens($x, $y + 1, $nInicial, $hDispo1, $pag, $totPag, $hCabecItens);
+        $hPrimeiraPagina = ($totPag === 1) ? $hDispo1ComDados : $hDispo1;
+        $y = $this->itens($x, $y + 1, $nInicial, $hPrimeiraPagina, $pag, $totPag, $hCabecItens);
+        // Garante que a próxima página continue do último item processado
+        $nInicial = $this->qtdeItensProc;
 
         //coloca os dados do ISSQN
         if ($linhaISSQN == 1) {
@@ -736,8 +757,10 @@ class Danfe extends DaCommon
         } else {
             $y += 4;
         }
-        //coloca os dados adicionais da NFe
-        $y = $this->dadosAdicionais($x, $y, $this->hdadosadic);
+        //coloca os dados adicionais apenas na última página
+        if ($pag == $totPag) {
+            $y = $this->dadosAdicionais($x, $y, $this->hdadosadic);
+        }
         //coloca o rodapé da página
         if ($this->orientacao == 'P') {
             $this->rodape($xInic);
@@ -761,7 +784,16 @@ class Danfe extends DaCommon
             //coloca o cabeçalho na página adicional
             $y = $this->header($x, $y, $n, $totPag);
             //coloca os itens na página adicional
-            $y = $this->itens($x, $y + 1, $nInicial, $hDispo2, $n, $totPag, $hCabecItens);
+            $hDispoPagina = ($n == $totPag) ? $hDispoLast : $hDispo2;
+            $y = $this->itens($x, $y + 1, $nInicial, $hDispoPagina, $n, $totPag, $hCabecItens);
+            // Atualiza ponto de continuidade para a próxima página
+            $nInicial = $this->qtdeItensProc;
+            //coloca os dados adicionais na última página
+            if ($n == $totPag) {
+                $y = $this->dadosAdicionais($x, $y, $this->hdadosadic);
+            }
+
+
             //coloca o rodapé da página
             if ($this->orientacao == 'P') {
                 $this->rodape($this->margesq);
