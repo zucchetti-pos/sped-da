@@ -126,10 +126,39 @@ trait Helper
         ];
     }
 
+    private function calculateHeightBloco8()
+    {
+        $papel = [$this->paperwidth, 100];
+        $wprint = $this->paperwidth - (2 * $this->margem);
+
+        $pdf = new \NFePHP\DA\Legacy\Pdf('P', 'mm', $papel);
+
+        $fontSize = 8;
+        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
+
+        if ($this->paperwidth < 70) {
+            $fontSize = 5;
+            $aFont['size'] = 5;
+        }
+
+        $textoTributos = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012)";
+        $linhasCpl = str_replace(';', "\n", $this->infCpl);
+
+        $hfont = (imagefontheight($fontSize) / 72) * 14;
+
+        $numLinhas =
+            (int) $pdf->getNumLines($textoTributos, $wprint, $aFont) +
+            (int) $pdf->getNumLines($linhasCpl, $wprint, $aFont) +
+            2;
+
+        return (int) ($numLinhas * $hfont) + $this->margem;
+    }
+
     private function calculatePaperLength()
     {
         $wprint = $this->paperwidth - (2 * $this->margem);
         $this->bloco6 = $this->calculateHeightItens($wprint * $this->descPercent);
+        $this->bloco8 = $this->calculateHeightBloco8();
 
         return array_sum([
             $this->bloco1,
