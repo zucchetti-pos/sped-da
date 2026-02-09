@@ -551,14 +551,14 @@ class Danfe extends DaCommon
         $linhasDup = 0;
         $qtdPag    = 0;
 
-        $hasDup = isset($this->dup) && $this->dup->length > 0;
-        $hasDetPag = isset($this->detPag) && $this->detPag->length > 0;
+        $temDup = isset($this->dup) && $this->dup->length > 0;
+        $temDetPag = isset($this->detPag) && $this->detPag->length > 0;
 
         $considerarDetPag = $this->exibirTextoFatura;
 
-        if ($hasDup) {
+        if ($temDup) {
             $qtdPag = $this->dup->length;
-        } elseif ($considerarDetPag && $hasDetPag) {
+        } elseif ($considerarDetPag && $temDetPag) {
             $qtdPag = $this->detPag->length;
         }
         if (($qtdPag > 0) && ($qtdPag <= 7)) {
