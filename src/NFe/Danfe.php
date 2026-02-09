@@ -550,9 +550,15 @@ class Danfe extends DaCommon
         //Verificando quantas linhas serão usadas para impressão das duplicatas
         $linhasDup = 0;
         $qtdPag    = 0;
-        if (isset($this->dup) && $this->dup->length > 0) {
+
+        $hasDup = isset($this->dup) && $this->dup->length > 0;
+        $hasDetPag = isset($this->detPag) && $this->detPag->length > 0;
+
+        $considerarDetPag = $this->exibirTextoFatura;
+
+        if ($hasDup) {
             $qtdPag = $this->dup->length;
-        } elseif (isset($this->detPag) && $this->detPag->length > 0) {
+        } elseif ($considerarDetPag && $hasDetPag) {
             $qtdPag = $this->detPag->length;
         }
         if (($qtdPag > 0) && ($qtdPag <= 7)) {
