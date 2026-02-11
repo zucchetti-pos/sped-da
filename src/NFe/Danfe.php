@@ -732,19 +732,28 @@ class Danfe extends DaCommon
                 $formaPag[$fPag] = $fPag;
             }
         }
+        
         //caso tenha boleto imprimir fatura
         if ($this->dup->length > 0) {
             $y = $this->fatura($x, $y + 1);
-        } elseif ($this->exibirTextoFatura) {
-            //Se somente tiver a forma de pagamento sem pagamento não imprimir nada
-            if (count($formaPag) == '1' && isset($formaPag[90])) {
-                $y = $y;
-            } else {
-                //caso tenha mais de uma forma de pagamento ou seja diferente de boleto exibe a
-                //forma de pagamento e o valor
-                $y = $this->pagamento($x, $y + 1);
+        }
+
+        $vTroco = 0;
+        $pagList = $this->dom->getElementsByTagName('pag');
+        if ($pagList->length > 0) {
+            $pag = $pagList->item(0);
+
+            $vTrocoList = $pag->getElementsByTagName('vTroco');
+
+            if ($vTrocoList->length > 0) {
+                $vTroco = (float) $vTrocoList->item(0)->nodeValue;
             }
         }
+        
+        if (isset($formaPag['01']) && $vTroco > 0) {
+            $y = $this->pagamento($x, $y + 1);
+        }
+               
         //coloca os dados dos impostos e totais da NFe
         $y = $this->imposto($x, $y + 1);
         //coloca os dados do trasnporte
