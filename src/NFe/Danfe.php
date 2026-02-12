@@ -638,13 +638,15 @@ class Danfe extends DaCommon
         //$hDispo1 += 14;
         $hDispo2 = $this->hPrint - ($hcabecalho + $hfooter + $hCabecItens);
 
-        // InfoComplementar fica sempre na ultima pagina ( se tiver 1 pagina, fica nela, se tiver mais de uma 1 pagina, vai pra ultima)
-        $hDispoLast = $hDispo2 - $this->hdadosadic;
+        // Y inicial do bloco de dados adicionais (parte superior da caixa).
+        // Se os itens avançarem além deste ponto, os dados adicionais devem ir para a próxima página.
+        $yInicioDadosAdicionais = $this->maxH - (7 + $this->hdadosadic);
+        $hDadosAdicReal = $this->hdadosadic + 3;
+        $hDispoLast = $hDispo2 - $hDadosAdicReal;
         if ($hDispoLast < $hCabecItens) {
             $hDispoLast = $hCabecItens;
         }
-
-        $hDispo1ComDados = $hDispo1 - $this->hdadosadic;
+        $hDispo1ComDados = $hDispo1 - $hDadosAdicReal;
         if ($hDispo1ComDados < $hCabecItens) {
             $hDispo1ComDados = $hCabecItens;
         }
@@ -692,7 +694,7 @@ class Danfe extends DaCommon
 
         // Se itens + quadro final não couberem na última página, força criar nova página
         $hUltimaDisponivel = ($totPag === 1) ? $hDispo1 : $hDispo2;
-        if (($hUsado + $this->hdadosadic) > $hUltimaDisponivel) {
+        if (($hUsado + $hDadosAdicReal) > $hUltimaDisponivel) {
             $totPag++;
         }
 
@@ -761,6 +763,7 @@ class Danfe extends DaCommon
         //itens da DANFE
         $nInicial = 0;
 
+        $this->qtdeItensProc = 0;
         $hPrimeiraPagina = ($totPag === 1) ? $hDispo1ComDados : $hDispo1;
         $y = $this->itens($x, $y + 1, $nInicial, $hPrimeiraPagina, $pag, $totPag, $hCabecItens);
         // Garante que a próxima página continue do último item processado
@@ -771,6 +774,14 @@ class Danfe extends DaCommon
             $y = $this->issqn($x, $y + 4);
         } else {
             $y += 4;
+        }
+        // prioridade para itens: se ainda houver itens, cria nova página antes dos dados adicionais
+        if ($pag == $totPag && $this->qtdeItensProc < $qtdeItens) {
+            $totPag++;
+        }
+        // se os itens ocuparam a área do quadro final, joga os dados adicionais para a próxima página
+        if ($pag == $totPag && $this->qtdeItensProc == $qtdeItens && $this->yDados > $yInicioDadosAdicionais) {
+            $totPag++;
         }
         //coloca os dados adicionais apenas na última página
         if ($pag == $totPag) {
@@ -803,21 +814,28 @@ class Danfe extends DaCommon
             $y = $this->itens($x, $y + 1, $nInicial, $hDispoPagina, $n, $totPag, $hCabecItens);
             // Atualiza ponto de continuidade para a próxima página
             $nInicial = $this->qtdeItensProc;
+            //se estiver na última página e ainda restar itens para inserir, adiciona mais uma página
+            if ($n == $totPag && $this->qtdeItensProc < $qtdeItens) {
+                $totPag++;
+            }
+            // se os itens desta página avançaram na área dos dados adicionais, cria uma página extra para o quadro final
+            if (
+                $n == $totPag
+                && $this->qtdeItensProc == $qtdeItens
+                && $this->yDados > $yInicioDadosAdicionais
+            ) {
+                $totPag++;
+            }
             //coloca os dados adicionais na última página
             if ($n == $totPag) {
                 $y = $this->dadosAdicionais($x, $y, $this->hdadosadic);
             }
-
 
             //coloca o rodapé da página
             if ($this->orientacao == 'P') {
                 $this->rodape($this->margesq);
             } else {
                 $this->rodape($this->margesq);
-            }
-            //se estiver na última página e ainda restar itens para inserir, adiciona mais uma página
-            if ($n == $totPag && $this->qtdeItensProc < $qtdeItens) {
-                $totPag++;
             }
         }
     }
@@ -3433,6 +3451,7 @@ class Danfe extends DaCommon
             }
         }
 
+        $this->yDados = $y;
         return $oldY + $hmax;
     }
 
