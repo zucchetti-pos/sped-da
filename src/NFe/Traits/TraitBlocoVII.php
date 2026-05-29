@@ -279,43 +279,6 @@ trait TraitBlocoVII
 
     protected function blocoVIIProt($y, $subSize, $protocolo, $dhRecbto)
     {
-        if (empty($protocolo) && empty($dhRecbto)) return;
-
-        $texto = "Protocolo de Autorização:  {$protocolo}";
-        $aFont = ['font' => $this->fontePadrao, 'size' => (8 - $subSize), 'style' => ''];
-        $y1 = $this->pdf->textBox(
-            $this->margem,
-            $y,
-            $this->wPrint,
-            4,
-            $texto,
-            $aFont,
-            'T',
-            'C',
-            false,
-            '',
-            true
-        );
-
-        $texto = "Data de Autorização:  {$dhRecbto}";
-        $aFont = ['font' => $this->fontePadrao, 'size' => (8 - $subSize), 'style' => ''];
-        return $this->pdf->textBox(
-            $this->margem,
-            $y + $y1,
-            $this->wPrint,
-            4,
-            $texto,
-            $aFont,
-            'T',
-            'C',
-            false,
-            '',
-            true
-        );
-    }
-
-    protected function blocoVIIProt($y, $subSize, $protocolo, $dhRecbto)
-    {
         $texto = "Protocolo de Autorização:  {$protocolo}";
         $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
         $y1 = $this->pdf->textBox(
