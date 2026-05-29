@@ -71,7 +71,7 @@ trait TraitBlocoVII
                 false
             );
 
-            $y1 += 2 * $yPlus;
+            $y1 += 2*$yPlus;
             $num = str_pad($this->getTagValue($this->ide, "nNF"), 9, '0', STR_PAD_LEFT);
             $serie = str_pad($this->getTagValue($this->ide, "serie"), 3, '0', STR_PAD_LEFT);
             $data = (new \DateTime($this->getTagValue($this->ide, "dhEmi")))->format('d/m/Y H:i:s');
@@ -125,10 +125,10 @@ trait TraitBlocoVII
 
             if (empty($protocolo)) {
                 $texto = "Pendente de autorização";
-                $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
+                $aFont = ['font'=> $this->fontePadrao, 'size' => 8, 'style' => 'I'];
                 $y5 = $this->pdf->textBox(
                     $this->margem,
-                    $y + $y1 + $y2 + $y3 + $y4,
+                    $y+$y1+$y2+$y3+$y4,
                     $this->wPrint,
                     3,
                     $texto,
@@ -141,7 +141,7 @@ trait TraitBlocoVII
                 );
             } else {
                 $this->blocoVIIProt(
-                    $y + $y1 + $y2 + $y3 + $y4,
+                    $y+$y1+$y2+$y3+$y4,
                     $subSize,
                     $protocolo,
                     $dhRecbto
@@ -267,7 +267,7 @@ trait TraitBlocoVII
             );
 
             $this->blocoVIIProt(
-                $y + 1 + $y1 + $y2,
+                $y+1+$y1+$y2,
                 $subSize,
                 $protocolo,
                 $dhRecbto
@@ -279,10 +279,8 @@ trait TraitBlocoVII
 
     protected function blocoVIIProt($y, $subSize, $protocolo, $dhRecbto)
     {
-        if (empty($protocolo) && empty($dhRecbto)) return;
-
         $texto = "Protocolo de Autorização:  {$protocolo}";
-        $aFont = ['font' => $this->fontePadrao, 'size' => (8 - $subSize), 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
         $y1 = $this->pdf->textBox(
             $this->margem,
             $y,
@@ -298,10 +296,10 @@ trait TraitBlocoVII
         );
 
         $texto = "Data de Autorização:  {$dhRecbto}";
-        $aFont = ['font' => $this->fontePadrao, 'size' => (8 - $subSize), 'style' => ''];
+        $aFont = ['font'=> $this->fontePadrao, 'size' => (8-$subSize), 'style' => ''];
         return $this->pdf->textBox(
             $this->margem,
-            $y + $y1,
+            $y+$y1,
             $this->wPrint,
             4,
             $texto,
