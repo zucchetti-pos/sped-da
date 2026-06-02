@@ -49,7 +49,7 @@ trait Bloco5
     protected function fillRecipientDocumentAndIE($y)
     {
         $doc = $this->getDocument();
-        $cnpjOrCpf = preg_replace('/[^0-9]/', '', $doc);
+        $cnpjOrCpf = preg_replace('/[^A-Z0-9]/', '', $doc);
         $textLabel = strlen($cnpjOrCpf) == 14 ? 'CNPJ: ' : 'CPF: ';
 
         $ie = !empty($this->dest->getElementsByTagName("IE")->item(0))
@@ -65,7 +65,7 @@ trait Bloco5
     protected function getDocument()
     {
         $cnpj = !empty($this->dest->getElementsByTagName("CNPJ")->item(0))
-            ? $this->formatField($this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue, "###.###.###/####-##")
+            ? $this->formatField($this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue, "##.###.###/####-##")
             : null;
         $cpf = !empty($this->dest->getElementsByTagName("CPF")->item(0))
             ? $this->formatField($this->dest->getElementsByTagName("CPF")->item(0)->nodeValue, '###.###.###-##')

@@ -4,6 +4,7 @@ namespace NFePHP\DA\NFe;
 
 use NFePHP\DA\Legacy\Dom;
 use NFePHP\DA\Legacy\Pdf;
+use NFePHP\Common\Keys;
 use \NFePHP\DA\Common\DaCommon;
 
 class Danfe extends DaCommon
@@ -494,7 +495,7 @@ class Danfe extends DaCommon
      * A definição de margens e posições iniciais para a impressão são estabelecidas
      * pelo conteúdo da funçao e podem ser modificados.
      *
-     * @return string O ID da NFe numero de 44 digitos extraido do arquivo XML
+     * @return string O ID da NFe de 44 caracteres extraído do arquivo XML
      */
     protected function monta(
         $logo = ''
@@ -1245,7 +1246,7 @@ class Danfe extends DaCommon
         $h  = 32;
         $this->pdf->textBox($x, $y, $w, $h);
         $this->pdf->setFillColor(0, 0, 0);
-        $chave_acesso = str_replace('NFe', '', $this->infNFe->getAttribute("Id"));
+        $chave_acesso = Keys::extractAccessKey($this->infNFe->getAttribute("Id"));
         $bW           = 75;
         $bH           = 12;
         //codigo de barras
@@ -1390,7 +1391,7 @@ class Danfe extends DaCommon
         if (!empty($this->emit->getElementsByTagName("CNPJ")->item(0)->nodeValue)) {
             $texto = $this->formatField(
                 $this->emit->getElementsByTagName("CNPJ")->item(0)->nodeValue,
-                "###.###.###/####-##"
+                "##.###.###/####-##"
             );
         } else {
             $texto = !empty($this->emit->getElementsByTagName("CPF")->item(0)->nodeValue)
@@ -1507,7 +1508,7 @@ class Danfe extends DaCommon
         if (!empty($this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue)) {
             $texto = $this->formatField(
                 $this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue,
-                "###.###.###/####-##"
+                "##.###.###/####-##"
             );
         } else {
             $texto = !empty($this->dest->getElementsByTagName("CPF")->item(0)->nodeValue)
@@ -1724,7 +1725,7 @@ class Danfe extends DaCommon
         if (!empty($this->entrega->getElementsByTagName("CNPJ")->item(0)->nodeValue)) {
             $texto = $this->formatField(
                 $this->entrega->getElementsByTagName("CNPJ")->item(0)->nodeValue,
-                "###.###.###/####-##"
+                "##.###.###/####-##"
             );
         } else {
             $texto = !empty($this->entrega->getElementsByTagName("CPF")->item(0)->nodeValue) ?
@@ -1877,7 +1878,7 @@ class Danfe extends DaCommon
         if (!empty($this->retirada->getElementsByTagName("CNPJ")->item(0)->nodeValue)) {
             $texto = $this->formatField(
                 $this->retirada->getElementsByTagName("CNPJ")->item(0)->nodeValue,
-                "###.###.###/####-##"
+                "##.###.###/####-##"
             );
         } else {
             $texto = !empty($this->retirada->getElementsByTagName("CPF")->item(0)->nodeValue) ?
@@ -4105,7 +4106,7 @@ class Danfe extends DaCommon
         $rpos  = strrpos($dd, '-');
         $dd    = substr($dd, $rpos + 1);
         $chave = sprintf($forma, $cUF, $this->tpEmis, $CNPJ, $vNF, $vICMS, $icmss, $dd);
-        $chave = $chave . $this->modulo11($chave);
+        $chave = $chave . Keys::verifyingDigit($chave);
 
         return $chave;
     }
