@@ -11,7 +11,7 @@ trait Bloco3
     {
         $emitRazao = $this->getTagValue($this->emit, "xNome");
         $emitIE = $this->getTagValue($this->emit, "IE");
-        $emitCnpj = $this->formatField($this->getTagValue($this->emit, "CNPJ"), "###.###.###/####-##");
+        $emitCnpj = $this->formatField($this->getTagValue($this->emit, "CNPJ"), "##.###.###/####-##");
         $emitFone = $this->formatPhone($this->getTagValue($this->enderEmit, "fone"));
         $emitEndereco = $this->formatEndereco();
 

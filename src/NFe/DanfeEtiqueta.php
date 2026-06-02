@@ -334,7 +334,7 @@ class DanfeEtiqueta extends DaCommon
         ) + 2;
 
         $cpfMask = '###.###.###-##';
-        $cnpjMask = '###.###.###/####-##';
+        $cnpjMask = '##.###.###/####-##';
         $deliveryIdentification = !empty($this->getTagValue($this->entrega, 'CNPJ'))
             ? $this->formatField($this->getTagValue($this->entrega, 'CNPJ'), $cnpjMask)
             : $this->formatField($this->getTagValue($this->entrega, 'CPF'), $cpfMask);
