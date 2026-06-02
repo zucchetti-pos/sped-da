@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use NFePHP\DA\Common\DaCommon;
 use NFePHP\DA\Legacy\Dom;
 use NFePHP\DA\Legacy\Pdf;
+use NFePHP\Common\Keys;
 
 class DanfeVarejo extends DaCommon
 {
@@ -273,7 +274,7 @@ class DanfeVarejo extends DaCommon
         $emitIE = $this->getTagValue($this->emit, "IE");
         $emitCnpj = $this->formatField(
             $this->getTagValue($this->emit, "CNPJ"),
-            "###.###.###/####-##"
+            "##.###.###/####-##"
         );
         $emitLgr = $this->getTagValue($this->enderEmit, "xLgr");
         $emitNro = $this->getTagValue($this->enderEmit, "nro");
@@ -342,7 +343,7 @@ class DanfeVarejo extends DaCommon
     protected function bloco3($y)
     {
         $this->pdf->setFillColor(0, 0, 0);
-        $chave_acesso = str_replace('NFe', '', $this->infNFe->getAttribute("Id"));
+        $chave_acesso = Keys::extractAccessKey($this->infNFe->getAttribute("Id"));
         $bW = $this->wPrint - ($this->margem * 2) - 9;
         $bH = 12;
         $x = $this->margem;
@@ -406,7 +407,7 @@ class DanfeVarejo extends DaCommon
         $y+= $this->pdf->textBox($this->margem + 5, $y + 5, $this->wPrint, 7, $texto, $aFont, 'T', 'L', 0, '', false);
         $y+= 5;
         $cnpj = !empty($this->dest->getElementsByTagName("CNPJ")->item(0))
-            ? $this->formatField($this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue, "###.###.###/####-##")
+            ? $this->formatField($this->dest->getElementsByTagName("CNPJ")->item(0)->nodeValue, "##.###.###/####-##")
             : null;
         $cpf = !empty($this->dest->getElementsByTagName("CPF")->item(0))
             ? $this->formatField($this->dest->getElementsByTagName("CPF")->item(0)->nodeValue, '###.###.###-##')
