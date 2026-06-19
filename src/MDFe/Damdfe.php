@@ -168,7 +168,7 @@ class Damdfe extends DaCommon
             $this->ferrov = $this->dom->getElementsByTagName("ferrov")->item(0);
             if (!empty($this->rodo)) {
                 $infANTT = $this->rodo->getElementsByTagName("infANTT")->item(0);
-                $this->RNTRC = empty($infANTT) ? null : $infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue;
+                $this->RNTRC = empty($infANTT) || empty($infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue) ? null : $infANTT->getElementsByTagName("RNTRC")->item(0)->nodeValue;
             }
             $this->ciot = "";
             if ($this->dom->getElementsByTagName('CIOT')->item(0) != "") {
