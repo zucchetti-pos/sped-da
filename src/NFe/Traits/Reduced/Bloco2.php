@@ -2,6 +2,8 @@
 
 namespace NFePHP\DA\NFe\Traits\Reduced;
 
+use NFePHP\Common\Keys;
+
 /**
  * @author Felipe Gabriel Hinkel <felipe.hinkel.dev@gmail.com>
  */
@@ -10,7 +12,7 @@ trait Bloco2
     protected function bloco2($y)
     {
         $this->pdf->setFillColor(0, 0, 0);
-        $chave_acesso = str_replace('NFe', '', $this->infNFe->getAttribute("Id"));
+        $chave_acesso = Keys::extractAccessKey($this->infNFe->getAttribute("Id"));
         $borderWidth = $this->wPrint - ($this->margem * 2) - 9;
         $borderHeight = 12;
         $x = $this->margem;
