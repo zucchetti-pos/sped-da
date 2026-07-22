@@ -449,11 +449,9 @@ class Danfe extends DaCommon
         //verificar se a informação sobre o valor aproximado dos tributos
         //já se encontra no campo de informações adicionais
         if ($this->exibirValorTributos) {
-            $flagVTT = strpos(strtolower(trim($this->textoAdic)), 'valor');
-            $flagVTT = $flagVTT || strpos(strtolower(trim($this->textoAdic)), 'vl');
-            $flagVTT = $flagVTT && strpos(strtolower(trim($this->textoAdic)), 'aprox');
-            $flagVTT = $flagVTT && (strpos(strtolower(trim($this->textoAdic)), 'trib') ||
-                strpos(strtolower(trim($this->textoAdic)), 'imp'));
+            $textoAdicLower = strtolower(trim($this->textoAdic));
+            $flagVTT = strpos($textoAdicLower, 'aprox') !== false
+                && (strpos($textoAdicLower, 'trib') !== false || strpos($textoAdicLower, 'imp') !== false);
             $vTotTrib = $this->getTagValue($this->ICMSTot, 'vTotTrib');
             if ($vTotTrib != '' && !$flagVTT) {
                 $this->textoAdic .= "\n Valor Aproximado dos Tributos : R$ "
