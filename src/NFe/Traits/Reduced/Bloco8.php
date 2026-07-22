@@ -17,6 +17,14 @@ trait Bloco8
 
     protected function fillTributosInfo($y)
     {
+        $infCplLower = strtolower(trim($this->infCpl));
+        $flagVTT = strpos($infCplLower, 'aprox') !== false
+            && (strpos($infCplLower, 'trib') !== false || strpos($infCplLower, 'imp') !== false);
+
+        if ($flagVTT) {
+            return $y;
+        }
+
         $valor = $this->getTagValue($this->ICMSTot, 'vTotTrib');
         $trib = !empty($valor) ? number_format((float) $valor, 2, ',', '.') : '-----';
         $texto = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012): R$ {$trib}";
