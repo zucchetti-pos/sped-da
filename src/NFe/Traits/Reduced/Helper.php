@@ -142,9 +142,7 @@ trait Helper
         }
 
         $linhasCpl = str_replace(';', "\n", $this->infCpl);
-        $infCplLower = strtolower(trim($this->infCpl));
-        $flagVTT = strpos($infCplLower, 'aprox') !== false
-            && (strpos($infCplLower, 'trib') !== false || strpos($infCplLower, 'imp') !== false);
+        $flagVTT = $this->hasApproxTaxInfo();
 
         $hfont = (imagefontheight($fontSize) / 72) * 14;
 
