@@ -2310,23 +2310,11 @@ class Danfe extends DaCommon
     protected function impostoHelper($x, $y, $w, $h, $titulo, $campoImposto)
     {
         $value = 0;
-        $value2 = 0;
         $the_field = $this->ICMSTot->getElementsByTagName($campoImposto)->item(0);
         if (isset($the_field)) {
             $value = $the_field->nodeValue;
-            if ($campoImposto == 'vICMS') { // soma junto ao ICMS o FCP
-                $the_field_aux = $this->ICMSTot->getElementsByTagName('vFCP')->item(0);
-                if (isset($the_field_aux)) {
-                    $value2 = $the_field_aux->nodeValue;
-                }
-            } elseif ($campoImposto == 'vST') { // soma junto ao ICMS ST o FCP ST
-                $the_field_aux = $this->ICMSTot->getElementsByTagName('vFCPST')->item(0);
-                if (isset($the_field_aux)) {
-                    $value2 = $the_field_aux->nodeValue;
-                }
-            }
         }
-        $valorImposto = number_format($value + $value2, 2, ",", ".");
+        $valorImposto = number_format($value, 2, ",", ".");
 
         $fontTitulo = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
         $fontValor  = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
