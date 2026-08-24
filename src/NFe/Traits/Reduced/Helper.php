@@ -141,15 +141,16 @@ trait Helper
             $aFont['size'] = 5;
         }
 
-        $textoTributos = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012)";
         $linhasCpl = str_replace(';', "\n", $this->infCpl);
+        $flagVTT = $this->hasApproxTaxInfo();
 
         $hfont = (imagefontheight($fontSize) / 72) * 14;
 
-        $numLinhas =
-            (int) $pdf->getNumLines($textoTributos, $wprint, $aFont) +
-            (int) $pdf->getNumLines($linhasCpl, $wprint, $aFont) +
-            2;
+        $numLinhas = (int) $pdf->getNumLines($linhasCpl, $wprint, $aFont) + 2;
+        if (!$flagVTT) {
+            $textoTributos = "Informação dos Tributos Totais Incidentes (Lei Federal 12.742/2012)";
+            $numLinhas += (int) $pdf->getNumLines($textoTributos, $wprint, $aFont);
+        }
 
         return (int) ($numLinhas * $hfont) + $this->margem;
     }
