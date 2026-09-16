@@ -55,20 +55,34 @@ trait Helper
 
     private function getTruncatedDescription($prod, $descriptionWidth)
     {
-        $xProd = substr($this->getTagValue($prod, "xProd"), 0, 30);
+        $xProd = $this->getTagValue($prod, "xProd");
         return $this->truncateDescriptionToFit($xProd, $descriptionWidth);
+    }
+
+    private function splitProductNameAndVariation($xProd)
+    {
+        $pattern = '/^(.*)( - Cor .+ \/ Tamanho .+)$/su';
+
+        if (preg_match($pattern, (string) $xProd, $matches)) {
+            return [$matches[1], $matches[2]];
+        }
+
+        return [(string) $xProd, ''];
     }
 
     private function truncateDescriptionToFit($xProd, $descriptionWidth)
     {
+        [$productName, $variation] = $this->splitProductNameAndVariation($xProd);
+
         $tempPDF = new \NFePHP\DA\Legacy\Pdf();
         $tempPDF->setFont($this->fontePadrao, '', $this->getFontSize());
 
+        $xProd = substr($productName, 0, 30) . $variation;
         $n = $tempPDF->wordWrap($xProd, $descriptionWidth);
         $limit = 20;
 
         while ($n > 2) {
-            $xProd = substr((string) $xProd, 0, $limit);
+            $xProd = substr($productName, 0, $limit) . $variation;
             $tempPDF->wordWrap($xProd, $descriptionWidth, true);
             $n--;
         }
