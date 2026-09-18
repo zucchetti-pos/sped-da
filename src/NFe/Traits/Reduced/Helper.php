@@ -122,8 +122,13 @@ trait Helper
 
     private function updateTotals($vProd, $vDesc)
     {
-        $this->totalProducts += $vProd;
-        $this->totalDesc += $vDesc;
+        $this->totalProducts += $this->parseFormattedValue($vProd);
+        $this->totalDesc += $this->parseFormattedValue($vDesc);
+    }
+
+    private function parseFormattedValue($value)
+    {
+        return (float) str_replace(['.', ','], ['', '.'], (string) $value);
     }
 
     private function storeItem($cProd, $xProd, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h)
