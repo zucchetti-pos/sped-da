@@ -30,7 +30,7 @@ class Danfe80mm extends DaCommon
 
     protected $papel;
     protected $paperwidth = 80; //mm
-    protected $descPercent = 0.38;
+    protected $descPercent = 0.32;
     protected $email = null;
     protected $xml; // string XML NFe
     protected $dom;

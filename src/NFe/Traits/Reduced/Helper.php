@@ -33,7 +33,7 @@ trait Helper
     {
         $prod = $item->getElementsByTagName("prod")->item(0);
         $cProd = $this->formatProductCode($prod);
-        $xProd = $this->getTruncatedDescription($prod, $descriptionWidth);
+        $xProd = $this->getTruncatedDescription($prod);
         $qCom = $this->formatQuantity($prod);
         $uCom = $this->getTagValue($prod, "uCom");
         $vUnCom = $this->formatUnitPrice($prod);
@@ -53,41 +53,10 @@ trait Helper
         return str_pad($this->getTagValue($prod, "cProd"), 5, '0', STR_PAD_LEFT);
     }
 
-    private function getTruncatedDescription($prod, $descriptionWidth)
+    private function getTruncatedDescription($prod)
     {
-        $xProd = $this->getTagValue($prod, "xProd");
-        return $this->truncateDescriptionToFit($xProd, $descriptionWidth);
-    }
-
-    private function splitProductNameAndVariation($xProd)
-    {
-        $pattern = '/^(.*)( - Cor .+ \/ Tamanho .+)$/su';
-
-        if (preg_match($pattern, (string) $xProd, $matches)) {
-            return [$matches[1], $matches[2]];
-        }
-
-        return [(string) $xProd, ''];
-    }
-
-    private function truncateDescriptionToFit($xProd, $descriptionWidth)
-    {
-        [$productName, $variation] = $this->splitProductNameAndVariation($xProd);
-
-        $tempPDF = new \NFePHP\DA\Legacy\Pdf();
-        $tempPDF->setFont($this->fontePadrao, '', $this->getFontSize());
-
-        $xProd = substr($productName, 0, 30) . $variation;
-        $n = $tempPDF->wordWrap($xProd, $descriptionWidth);
-        $limit = 20;
-
-        while ($n > 2) {
-            $xProd = substr($productName, 0, $limit) . $variation;
-            $tempPDF->wordWrap($xProd, $descriptionWidth, true);
-            $n--;
-        }
-
-        return $xProd;
+        $limit = 120;
+        return substr($this->getTagValue($prod, "xProd"), 0, $limit);
     }
 
     private function formatQuantity($prod)
