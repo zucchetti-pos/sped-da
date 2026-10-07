@@ -33,17 +33,17 @@ trait Helper
     {
         $prod = $item->getElementsByTagName("prod")->item(0);
         $cProd = $this->formatProductCode($prod);
-        $xProd = $this->getTruncatedDescription($prod);
+        $descricao = $this->buildItemDescription($item, $prod);
         $qCom = $this->formatQuantity($prod);
         $uCom = $this->getTagValue($prod, "uCom");
         $vUnCom = $this->formatUnitPrice($prod);
         $vDesc = $this->formatDiscount($prod);
         $vProd = $this->formatProductValue($prod);
 
-        $h = $this->calculateItemHeight($xProd, $descriptionWidth, $fsize, $hfont);
+        $h = $this->calculateItemHeight($descricao, $descriptionWidth, $fsize, $hfont);
 
         $this->updateTotals($vProd, $vDesc);
-        $this->storeItem($cProd, $xProd, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h);
+        $this->storeItem($cProd, $descricao, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h);
 
         return $h;
     }
@@ -57,6 +57,22 @@ trait Helper
     {
         $limit = 120;
         return substr($this->getTagValue($prod, "xProd"), 0, $limit);
+    }
+
+    private function buildItemDescription($item, $prod)
+    {
+        $xProd = $this->getTruncatedDescription($prod);
+        $infAdProd = $this->getAdditionalProductInfo($item);
+
+        return $infAdProd !== ''
+            ? $xProd . "\n    " . $infAdProd
+            : $xProd;
+    }
+
+    private function getAdditionalProductInfo($item)
+    {
+        $node = $item->getElementsByTagName("infAdProd")->item(0);
+        return $node ? trim($node->nodeValue) : '';
     }
 
     private function formatQuantity($prod)

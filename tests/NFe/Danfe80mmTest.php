@@ -35,4 +35,29 @@ class Danfe80mmTest extends TestCase
 
         $this->assertTrue(Utils::pdfContemTexto($pdf, 'FRIGIDEIRA RETA'));
     }
+
+    public function test_exibeInformacaoAdicionalDoProduto_quandoPresenteNoXml(): void
+    {
+        $xml = file_get_contents(TEST_FIXTURES . 'xml/nfe.xml');
+
+        $obj = new Danfe80mm($xml);
+        $pdf = $obj->render();
+
+        $this->assertTrue(Utils::pdfContemTexto($pdf, 'FRIGIDEIRA RETA'));
+        $this->assertTrue(Utils::pdfContemTexto($pdf, '7896554412009'));
+    }
+
+    public function test_naoQuebra_quandoItemNaoTemInformacaoAdicionalDoProduto(): void
+    {
+        $xml = str_replace(
+            '<infAdProd>7896554412009</infAdProd>',
+            '',
+            file_get_contents(TEST_FIXTURES . 'xml/nfe.xml')
+        );
+
+        $obj = new Danfe80mm($xml);
+        $pdf = $obj->render();
+
+        $this->assertTrue(Utils::pdfContemTexto($pdf, 'FRIGIDEIRA RETA'));
+    }
 }
