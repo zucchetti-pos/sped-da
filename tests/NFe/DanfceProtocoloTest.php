@@ -3,6 +3,7 @@
 namespace NFePHP\DA\Tests\NFe;
 
 use NFePHP\DA\NFe\Danfce;
+use NFePHP\DA\Tests\Utils;
 use PHPUnit\Framework\TestCase;
 
 class DanfceProtocoloTest extends TestCase
@@ -19,12 +20,7 @@ class DanfceProtocoloTest extends TestCase
         $danfce = new Danfce($xml);
         $pdf = $danfce->render();
 
-        $arquivo = tempnam(sys_get_temp_dir(), 'danfce');
-        file_put_contents($arquivo, $pdf);
-        $texto = (string) shell_exec('pdftotext ' . escapeshellarg($arquivo) . ' -');
-        unlink($arquivo);
-
-        $this->assertStringContainsString($protocolo, preg_replace('/\s+/', '', $texto));
+        $this->assertTrue(Utils::pdfContemTexto($pdf, $protocolo));
     }
 
     public static function protocolos(): array
