@@ -50,7 +50,7 @@ trait TraitBlocoVII
         $protocolo = '';
         $dhRecbto = '';
         if (!empty($this->infProt)) {
-            $protocolo = $this->formatField($this->getTagValue($this->infProt, 'nProt'), '### ########## ##');
+            $protocolo = $this->getTagValue($this->infProt, 'nProt');
             $dhRecbto = (new \DateTime($this->getTagValue($this->infProt, "dhRecbto")))->format('d/m/Y H:i:s');
         }
 
