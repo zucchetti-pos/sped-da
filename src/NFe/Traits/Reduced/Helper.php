@@ -33,17 +33,17 @@ trait Helper
     {
         $prod = $item->getElementsByTagName("prod")->item(0);
         $cProd = $this->formatProductCode($prod);
-        $xProd = $this->getTruncatedDescription($prod, $descriptionWidth);
+        $descricao = $this->buildItemDescription($item, $prod);
         $qCom = $this->formatQuantity($prod);
         $uCom = $this->getTagValue($prod, "uCom");
         $vUnCom = $this->formatUnitPrice($prod);
         $vDesc = $this->formatDiscount($prod);
         $vProd = $this->formatProductValue($prod);
 
-        $h = $this->calculateItemHeight($xProd, $descriptionWidth, $fsize, $hfont);
+        $h = $this->calculateItemHeight($descricao, $descriptionWidth, $fsize, $hfont);
 
         $this->updateTotals($vProd, $vDesc);
-        $this->storeItem($cProd, $xProd, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h);
+        $this->storeItem($cProd, $descricao, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h);
 
         return $h;
     }
@@ -53,27 +53,26 @@ trait Helper
         return str_pad($this->getTagValue($prod, "cProd"), 5, '0', STR_PAD_LEFT);
     }
 
-    private function getTruncatedDescription($prod, $descriptionWidth)
+    private function getTruncatedDescription($prod)
     {
-        $xProd = substr($this->getTagValue($prod, "xProd"), 0, 30);
-        return $this->truncateDescriptionToFit($xProd, $descriptionWidth);
+        $limit = 120;
+        return substr($this->getTagValue($prod, "xProd"), 0, $limit);
     }
 
-    private function truncateDescriptionToFit($xProd, $descriptionWidth)
+    private function buildItemDescription($item, $prod)
     {
-        $tempPDF = new \NFePHP\DA\Legacy\Pdf();
-        $tempPDF->setFont($this->fontePadrao, '', $this->getFontSize());
+        $xProd = $this->getTruncatedDescription($prod);
+        $infAdProd = $this->getAdditionalProductInfo($item);
 
-        $n = $tempPDF->wordWrap($xProd, $descriptionWidth);
-        $limit = 20;
+        return $infAdProd !== ''
+            ? $xProd . "\n    " . $infAdProd
+            : $xProd;
+    }
 
-        while ($n > 2) {
-            $xProd = substr((string) $xProd, 0, $limit);
-            $tempPDF->wordWrap($xProd, $descriptionWidth, true);
-            $n--;
-        }
-
-        return $xProd;
+    private function getAdditionalProductInfo($item)
+    {
+        $node = $item->getElementsByTagName("infAdProd")->item(0);
+        return $node ? trim($node->nodeValue) : '';
     }
 
     private function formatQuantity($prod)
@@ -108,8 +107,13 @@ trait Helper
 
     private function updateTotals($vProd, $vDesc)
     {
-        $this->totalProducts += $vProd;
-        $this->totalDesc += $vDesc;
+        $this->totalProducts += $this->parseFormattedValue($vProd);
+        $this->totalDesc += $this->parseFormattedValue($vDesc);
+    }
+
+    private function parseFormattedValue($value)
+    {
+        return (float) str_replace(['.', ','], ['', '.'], (string) $value);
     }
 
     private function storeItem($cProd, $xProd, $qCom, $uCom, $vUnCom, $vDesc, $vProd, $h)
