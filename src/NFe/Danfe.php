@@ -1652,9 +1652,11 @@ class Danfe extends DaCommon
             $dhSaiEnt   = !empty($this->ide->getElementsByTagName("dhSaiEnt")->item(0)->nodeValue)
                 ? $this->ide->getElementsByTagName("dhSaiEnt")->item(0)->nodeValue
                 : '';
-            $tsDhSaiEnt = $this->toDateTime($dhSaiEnt);
-            if ($tsDhSaiEnt) {
-                $hSaiEnt = $tsDhSaiEnt->format('H:i:s');
+            if (!empty($this->ide->getElementsByTagName("dhSaiEnt")->item(0)->nodeValue)) {
+                $tsDhSaiEnt = $this->toDateTime($dhSaiEnt);
+                if ($tsDhSaiEnt) {
+                    $hSaiEnt = $tsDhSaiEnt->format('H:i:s');
+                }
             }
         }
         $texto = $hSaiEnt;
